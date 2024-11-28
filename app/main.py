@@ -110,6 +110,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def read_item(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/minesweeper")
+async def minesweeper(request: Request):
+    return templates.TemplateResponse("minesweeper.html", {"request": request})
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
