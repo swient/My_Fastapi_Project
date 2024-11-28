@@ -1,188 +1,299 @@
-// 全局變量
-let rows = 30;
-let cols = 15;
-let mineCount = 50;
-let flagCount = mineCount;
-let board = [];
-let isGameOver = false;
-let timer;
-let elapsedTime = 0;
+document.addEventListener('DOMContentLoaded', () => {
+    const boardElement = document.getElementById('board');
+    const timerElement = document.getElementById('timer');
+    const minesLeftElement = document.getElementById('mines-left');
+    const startButton = document.getElementById('start-btn');
+    const resetButton = document.getElementById('reset-btn');
+    const difficultySelect = document.getElementById('difficulty');
+  
+    let board = [];
+    let timer = 0;
+    let timerInterval;
+    let mineCount = 0;
+    let revealedCount = 0;
+    let rows, cols, mines;
+    let firstClick = true;
+    let gameEnded = false;
 
-// DOM 元素引用
-const minefield = document.getElementById('minesweeper');
-const flagCounter = document.getElementById('flag-count');
-const timeCounter = document.getElementById('timer');
-const restartButton = document.getElementById('restart');
-
-// 初始化遊戲
-function init() {
-    flagCounter.textContent = `Flags: ${flagCount}`;
-    timeCounter.textContent = 'Time: 0';
-    createBoard();
-    startTimer();
-}
-
-// 創建棋盤
-function createBoard() {
-    minefield.innerHTML = '';  // 清空舊的棋盤
-    board = [];  // 重置遊戲數據
-
-    for (let r = 0; r < rows; r++) {
-        const row = [];
-        for (let c = 0; c < cols; c++) {
-            const cell = document.createElement('div');
-            cell.classList.add('grid-item');
-
-            // 左鍵點擊事件
-            cell.addEventListener('click', () => handleLeftClick(r, c));
-
-            // 右鍵點擊事件（標旗）
-            cell.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                handleRightClick(r, c);
-            });
-
-            minefield.appendChild(cell);
-            row.push({
-                mine: false,
-                flagged: false,
-                opened: false,
-                element: cell
-            });
-        }
-        board.push(row);
+    function initializeGame() {
+      clearInterval(timerInterval);
+      timer = 0;
+      revealedCount = 0;
+      firstClick = true;
+      gameEnded = false;
+      resetButton.textContent = '😀';
+      timerElement.textContent = '0';
+  
+      const difficulty = difficultySelect.value;
+      if (difficulty === 'easy') {
+        rows = 10;
+        cols = 10;
+        mines = 10;
+      } else if (difficulty === 'medium') {
+        rows = 10;
+        cols = 20;
+        mines = 25;
+      } else {
+        rows = 10;
+        cols = 25;
+        mines = 40;
+      }
+  
+      mineCount = mines;
+      minesLeftElement.textContent = mineCount;
+      createBoard();
     }
-
-    placeMines();
-}
-
-// 放置地雷
-function placeMines() {
-    let placedMines = 0;
-    while (placedMines < mineCount) {
-        const r = Math.floor(Math.random() * rows);
-        const c = Math.floor(Math.random() * cols);
-        if (!board[r][c].mine) {
-            board[r][c].mine = true;
-            placedMines++;
+  
+    function createBoard() {
+      board = Array.from({ length: rows }, () => Array(cols).fill({}));
+      boardElement.innerHTML = '';
+      boardElement.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+      boardElement.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+  
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          cell.dataset.row = i;
+          cell.dataset.col = j;
+  
+          cell.addEventListener('click', handleLeftClick);
+          cell.addEventListener('contextmenu', handleRightClick);
+          cell.addEventListener('mouseover', handleMouseOver);
+          cell.addEventListener('mouseout', handleMouseOut);
+          cell.addEventListener('mousedown', handleMouseDown);
+          cell.addEventListener('mouseup', handleMouseUp);
+  
+          boardElement.appendChild(cell);
         }
+      }
+  
+      placeMines();
     }
-}
+  
+    function placeMines() {
+      let placed = 0;
+      while (placed < mines) {
+        const row = Math.floor(Math.random() * rows);
+        const col = Math.floor(Math.random() * cols);
+  
+        if (!board[row][col].mine) {
+          board[row][col] = { mine: true, revealed: false, flagged: false };
+          placed++;
+        }
+      }
+  
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          if (!board[i][j].mine) {
+            board[i][j] = {
+              mine: false,
+              revealed: false,
+              flagged: false,
+              nearby: getNearbyMineCount(i, j),
+            };
+          }
+        }
+      }
+    }
+  
+    function getNearbyMineCount(row, col) {
+      const directions = [
+        [-1, -1], [-1, 0], [-1, 1],
+        [0, -1],         [0, 1],
+        [1, -1], [1, 0], [1, 1],
+      ];
+      return directions.reduce((count, [dx, dy]) => {
+        const x = row + dx,
+          y = col + dy;
+        return count + (board[x] && board[x][y] && board[x][y].mine ? 1 : 0);
+      }, 0);
+    }
+  
+    function startTimer() {
+      if (!timerInterval) {
+        timerInterval = setInterval(() => {
+          timer++;
+          timerElement.textContent = timer;
+        }, 1000);
+      }
+    }
+  
+    function handleLeftClick(e) {
+        if (gameEnded) 
+            return; // 檢查遊戲是否結束
+        const cell = e.target;
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
 
-// 處理左鍵點擊
-function handleLeftClick(r, c) {
-    if (isGameOver || board[r][c].flagged || board[r][c].opened) return;
+        if (board[row][col].flagged || board[row][col].revealed) return;
 
-    if (board[r][c].mine) {
-        gameOver(false);
-    } else {
-        openCell(r, c);
+        if (firstClick) {
+        firstClick = false;
+        startTimer();
+        }
+
+        if (board[row][col].mine) {
+        revealAllMines();
+        endGame(false);
+        } else {
+        revealCell(row, col);
         checkWin();
+        }
     }
-}
+  
+    function handleRightClick(e) {
+        if (gameEnded) 
+            return; // 檢查遊戲是否結束
+        e.preventDefault();
+        const cell = e.target;
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
 
-// 開啟方格
-function openCell(r, c) {
-    if (board[r][c].opened) return;
+        if (board[row][col].revealed) return;
 
-    board[r][c].opened = true;
-    board[r][c].element.classList.add('opened');
-    const mineCount = countAdjacentMines(r, c);
+        if (board[row][col].flagged) {
+        board[row][col].flagged = false;
+        cell.classList.remove('flagged');
+        cell.textContent = '';
+        mineCount++;
+        } else {
+        board[row][col].flagged = true;
+        cell.classList.add('flagged');
+        cell.textContent = '🚩';
+        mineCount--;
+        }
 
-    if (mineCount > 0) {
-        board[r][c].element.textContent = mineCount;
-    } else {
-        // 打開周圍無雷的格子
-        for (let dr = -1; dr <= 1; dr++) {
-            for (let dc = -1; dc <= 1; dc++) {
-                const nr = r + dr;
-                const nc = c + dc;
-                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
-                    openCell(nr, nc);
+        minesLeftElement.textContent = mineCount;
+    }
+  
+    function handleMouseOver(e) {
+        if (gameEnded) 
+            return; // 檢查遊戲是否結束
+        const cell = e.target;
+        const row = parseInt(cell.dataset.row);
+        const col = parseInt(cell.dataset.col);
+
+        if (!cell.classList.contains('revealed') && !board[row][col].flagged) {
+        cell.classList.add('hover');
+      }
+    }
+  
+    function handleMouseOut(e) {
+      const cell = e.target;
+      cell.classList.remove('hover');
+    }
+  
+    function handleMouseDown(e) {
+        if (gameEnded) 
+            return; // 檢查遊戲是否結束
+        if (e.buttons === 3) {
+            const cell = e.target;
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+
+            const neighbors = getNeighbors(row, col);
+            const flaggedCount = neighbors.filter(({ flagged }) => flagged).length;
+
+            if (flaggedCount === board[row][col].nearby) {
+                let hitMine = false;
+                neighbors.forEach(({ row, col, flagged }) => {
+                if (!flagged) {
+                    if (board[row][col].mine) {
+                    hitMine = true;
+                    } else {
+                    revealCell(row, col);
+                    checkWin();
+                    }
                 }
+                });
+
+                if (hitMine) {
+                revealAllMines();
+                endGame(false);
+                }
+            } else {
+                neighbors.forEach(({ row, col, revealed, flagged }) => {
+                    if (!revealed && ! flagged) {
+                        const neighborCell = boardElement.children[row * cols + col];
+                        neighborCell.classList.add('hover');
+                    }
+                });
             }
         }
     }
-}
-
-// 計算周圍的地雷數
-function countAdjacentMines(r, c) {
-    let count = 0;
-    for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
-            const nr = r + dr;
-            const nc = c + dc;
-            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && board[nr][nc].mine) {
-                count++;
-            }
-        }
+  
+    function handleMouseUp() {
+      const cells = boardElement.querySelectorAll('.cell');
+      cells.forEach((cell) => cell.classList.remove('hover'));
     }
-    return count;
-}
-
-// 處理右鍵點擊（標旗）
-function handleRightClick(r, c) {
-    if (isGameOver || board[r][c].opened) return;
-
-    board[r][c].flagged = !board[r][c].flagged;
-    board[r][c].element.textContent = board[r][c].flagged ? '🚩' : '';
-    flagCount += board[r][c].flagged ? -1 : 1;
-    flagCounter.textContent = `Flags: ${flagCount}`;
-    checkWin();
-}
-
-// 計時器
-function startTimer() {
-    clearInterval(timer);
-    elapsedTime = 0;
-    timer = setInterval(() => {
-        elapsedTime++;
-        timeCounter.textContent = `Time: ${elapsedTime}`;
-    }, 1000);
-}
-
-// 遊戲結束
-function gameOver(win) {
-    clearInterval(timer);
-    isGameOver = true;
-
-    board.forEach(row => row.forEach(cell => {
-        if (cell.mine) {
-            cell.element.textContent = '💣';
-        }
-    }));
-
-    restartButton.textContent = win ? '😎' : '😵';
-}
-
-// 檢查是否獲勝
-function checkWin() {
-    let openedCells = 0;
-    let correctFlags = 0;
-
-    board.forEach(row => row.forEach(cell => {
-        if (cell.opened) openedCells++;
-        if (cell.flagged && cell.mine) correctFlags++;
-    }));
-
-    if (openedCells === rows * cols - mineCount || correctFlags === mineCount) {
-        gameOver(true);
+  
+    function revealCell(row, col) {
+      const cell = board[row][col];
+      if (cell.revealed || cell.flagged) return;
+  
+      cell.revealed = true;
+      revealedCount++;
+      const cellElement = boardElement.children[row * cols + col];
+      cellElement.classList.add('revealed');
+  
+      if (cell.nearby) {
+        cellElement.textContent = cell.nearby;
+      } else {
+        const directions = [
+          [-1, -1], [-1, 0], [-1, 1],
+          [0, -1],         [0, 1],
+          [1, -1], [1, 0], [1, 1],
+        ];
+        directions.forEach(([dx, dy]) => {
+          const x = row + dx,
+            y = col + dy;
+          if (board[x] && board[x][y]) revealCell(x, y);
+        });
+      }
     }
-}
-
-// 重啟遊戲
-function restartGame() {
-    isGameOver = false;
-    flagCount = mineCount;
-    flagCounter.textContent = `Flags: ${mineCount}`;
-    timeCounter.textContent = 'Time: 0';
-    restartButton.textContent = '😃';
-    createBoard();
-    startTimer();
-}
-
-// 綁定重啟按鈕事件
-restartButton.addEventListener('click', restartGame);
-
-// 初始化遊戲
-init();
+  
+    function getNeighbors(row, col) {
+      const directions = [
+        [-1, -1], [-1, 0], [-1, 1],
+        [0, -1],         [0, 1],
+        [1, -1], [1, 0], [1, 1],
+      ];
+      return directions
+        .map(([dx, dy]) => ({ row: row + dx, col: col + dy }))
+        .filter(({ row, col }) => board[row] && board[row][col])
+        .map(({ row, col }) => ({ ...board[row][col], row, col }));
+    }
+  
+    function revealAllMines() {
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          if (board[i][j].mine) {
+            const cellElement = boardElement.children[i * cols + j];
+            cellElement.classList.add('revealed');
+            cellElement.textContent = '💣';
+          }
+        }
+      }
+    }
+  
+    function checkWin() {
+      if (revealedCount === rows * cols - mines) {
+        endGame(true);
+      }
+    }
+  
+    function endGame(win) {
+      clearInterval(timerInterval);
+      resetButton.textContent = win ? '😎' : '😭';
+      if (win) {
+        setTimeout(() => alert('恭喜，你贏了！再來一局！'), 10);
+      }
+      gameEnded = true;
+    }
+  
+    startButton.addEventListener('click', initializeGame);
+    resetButton.addEventListener('click', initializeGame);
+  
+    initializeGame();
+  });
