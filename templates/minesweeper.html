@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>踩地雷</title>
+  <link rel="stylesheet" href="/static/css/minesweeper.css">
+</head>
+<body>
+  <div class="control-bar">
+    <button onclick="location.href='/'">首頁</button>
+    <div class="user-profile" onclick="editProfile()">
+        <img src="/static/images/User-avatar.png" alt="User Avatar">
+    </div>
+  </div>
+  <div class="game-container">
+    <div class="top-bar">
+      <div class="difficulty">
+        <label for="difficulty">難度：</label>
+        <select id="difficulty">
+          <option value="easy">簡單 (10x10)</option>
+          <option value="medium">中等 (10x20)</option>
+          <option value="hard">困難 (10x25)</option>
+        </select>
+      </div>
+      <button id="start-btn">開始遊戲</button>
+    </div>
+    <div class="status-bar">
+      <div class="timer">時間：<span id="timer">0</span> 秒</div>
+      <div class="mines-left">剩餘地雷：<span id="mines-left">0</span></div>
+    </div>
+    <div class="face-container">
+      <button id="reset-btn" class="face">😀</button>
+    </div>
+    <div id="board" class="board"></div>
+  </div>
+  <script src="/static/js/minesweeper.js"></script>
+</body>
+</html>
