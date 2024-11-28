@@ -3,17 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minesweeper</title>
+    <title>遊戲首頁</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <div class="game-container">
-        <div id="minesweeper"></div>
-        <button id="restart" onclick="restartGame()">😃</button>
-        <div id="flag-count">Flags: 50</div>
-        <div id="timer">Time: 0</div>
+    <div class="control-bar">
+        <button onclick="location.href='/'">首頁</button>
+        <div class="user-profile" onclick="editProfile()">
+            <img src="/static/images/User-avatar.png" alt="User Avatar">
+        </div>
+    </div>
+    <div class="game-section">
+        
+        <div class="image-container">
+            <img src="/static/images/Minesweeper.png" alt="Minesweeper" class="game-image" onclick="location.href='/minesweeper'">
+            <div class="game-title">Minesweeper</div>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/Memory-game.png" alt="Memory Game" class="game-image" onclick="location.href='/memory-game'">
+            <div class="game-title">Memory Game</div>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/Spinning-top.png" alt="Spinning Top" class="game-image" onclick="location.href='/spinning-top'">
+            <div class="game-title">Spinning Top</div>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/Solitaire.png" alt="Solitaire" class="game-image" onclick="location.href='/solitaire'">
+            <div class="game-title">Solitaire</div>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/Snake.png" alt="Snake" class="game-image" onclick="location.href='/snake'">
+            <div class="game-title">Snake</div>
+        </div>
+        <div class="image-container">
+            <img src="/static/images/Tic-Tac-Toe.png" alt="Tic Tac Toe" class="game-image" onclick="location.href='/tic-tac-toe'">
+            <div class="game-title">Tic Tac Toe</div>
+        </div>
     </div>
 
-    <script src="/static/js/script.js"></script>
+    <script>
+        function editProfile() {
+            // 編輯用戶頭像和個人簡介的邏輯
+            alert("編輯用戶頭像和個人簡介");
+        }
+    </script>
 </body>
 </html>
