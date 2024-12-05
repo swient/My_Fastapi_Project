@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 # todolist
 from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, Date
 from sqlalchemy.orm import  declarative_base, sessionmaker, Session
 
 app = FastAPI()
@@ -19,9 +19,10 @@ SessionLocal = sessionmaker(autocommit = False, autoflush = False, bind = engine
 class Todo(Base):
     __tablename__ = "todos"
     id = Column(Integer, primary_key = True, index = True)
-    title = Column(String, nullable = False)
+    title = Column(String(100), nullable = False)
     description = Column(String, nullable = True)
     completed = Column(Boolean, nullable = False)
+    due_date = Column(Date, nullable = True)
 
 # Initialize Database's Table
 Base.metadata.create_all(bind = engine)
