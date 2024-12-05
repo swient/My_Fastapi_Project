@@ -8,6 +8,8 @@ requests = "*"
 fastapi = "*"
 uvicorn = "*"
 sqlalchemy = "*"
+alembic = "*"
+jinja2 = "*"
 
 [dev-packages]
 
