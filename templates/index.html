@@ -9,9 +9,22 @@
 <body>
     <div class="control-bar">
         <button onclick="location.href='/'">首頁</button>
-        <div class="user-profile" onclick="editProfile()">
-            <img src="/static/images/User-avatar.png" alt="User Avatar">
+        <div class="user-profile" onclick="toggleProfilePopup()">
+            <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
         </div>
+    </div>
+    <div id="profile-popup" class="profile-popup">
+        <div class="profile-header" onclick="toggleProfilePopup()">
+            <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
+            <span>{{ username }}</span>
+        </div>
+        {% if not username %}
+            <button onclick="window.location.href='/register'">註冊</button>
+            <button onclick="window.location.href='/login'">登入</button>
+        {% else %}
+            <button onclick="window.location.href='/logout'">退出登入</button>
+            <button onclick="editProfile()">修改頭像</button>
+        {% endif %}
     </div>
     <div class="game-section">
         <div class="image-container">
@@ -39,12 +52,21 @@
             <div class="game-title">Tic Tac Toe</div>
         </div>
     </div>
-
     <script>
+        function toggleProfilePopup() {
+            var popup = document.getElementById("profile-popup");
+            if (popup.style.display === "none" || popup.style.display === "") {
+                popup.style.display = "block";
+            } else {
+                popup.style.display = "none";
+            }
+        }
+
         function editProfile() {
-            // 編輯用戶頭像和個人簡介的邏輯
-            alert("編輯用戶頭像和個人簡介");
+            // 在這裡添加修改頭像的邏輯
+            alert("修改頭像功能尚未實現");
         }
     </script>
 </body>
 </html>
+

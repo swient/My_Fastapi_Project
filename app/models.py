@@ -17,3 +17,4 @@ class User(Base):
     username = Column(String(122), nullable=False)
     password = Column(String(128), nullable=False)  # 確保欄位足夠長以存儲加密密碼
     email = Column(String(100), unique=True, nullable=True)
+    profile_image = Column(String(120), nullable=True)

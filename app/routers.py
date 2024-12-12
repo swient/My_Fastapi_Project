@@ -1,9 +1,12 @@
-from fastapi import Depends, APIRouter, HTTPException
+from fastapi import Depends, Form, File, APIRouter, HTTPException, Request, UploadFile
+from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
 
 from .schemas import TodoCreate, TodoResponse
-from .models import Todo
+from .models import Todo, User
 from .database import SessionLocal
 
 router = APIRouter()
@@ -17,7 +20,7 @@ def get_db():
         db.close()
 
 '''
-ROUTING
+Todos
 '''
 
 @router.post("/todos", response_model = TodoResponse)
@@ -59,6 +62,81 @@ def delete_todo(todo_id : int, db : Session = Depends(get_db)):
     db.delete(db_todo)
     db.commit()
     return {"detail" : "Todo deleted successfully"}
+
+'''
+Users
+'''
+
+# 設置模板
+templates = Jinja2Templates(directory="templates")
+
+# 登入帳號
+@router.get("/login", response_class=HTMLResponse)
+def login_form(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request, "page_title": "登入"})
+
+@router.post("/login", response_class=HTMLResponse)
+def login(request: Request, username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
+    user = db.query(User).filter_by(username=username).first()
+    if user is None:
+        error = '用戶不存在'
+        return templates.TemplateResponse("login.html", {"request": request, "page_title": "登入", "error": error})
+    elif not verify_password(password, user.password):
+        error = '密碼錯誤'
+        return templates.TemplateResponse("login.html", {"request": request, "page_title": "登入", "error": error})
+    else:
+        request.session['username'] = username
+        request.session['user_avatar'] = user.profile_image
+        return RedirectResponse(url="/", status_code=303)
+
+# 註冊帳號
+@router.get("/register", response_class=HTMLResponse)
+def register_form(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request, "page_title": "註冊"})
+
+@router.post("/register", response_class=HTMLResponse)
+def register(request: Request, username: str = Form(...), password: str = Form(...), profile_image: UploadFile = File(None), db: Session = Depends(get_db)):
+    # 檢查用戶是否已存在
+    if db.query(User).filter_by(username=username).first():
+        return templates.TemplateResponse("register.html", {"request": request, "page_title": "註冊", "error": "用戶名已存在"})
+
+    # 檢查圖片格式（如果有上傳圖片）
+    if profile_image and profile_image.filename:  # 確保有選擇文件
+        if profile_image.content_type not in ["image/png", "image/jpeg"]:
+            return templates.TemplateResponse(
+                "register.html", {"request": request, "page_title": "註冊", "error": "僅支持 PNG 和 JPG 格式的圖片"}
+            )
+
+    # 創建新用戶
+    new_user = User(username=username, password=hash_password(password))
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)  # 獲取用戶 ID
+
+    # 處理頭像文件
+    if profile_image and profile_image.filename:  # 確保有文件被上傳
+        ext = ".png" if profile_image.content_type == "image/png" else ".jpg"
+        filename = f"{new_user.id}{ext}"
+        filepath = os.path.join("static/images/avatar", filename)
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        with open(filepath, "wb") as f:
+            f.write(profile_image.file.read())
+    else:
+        filename = "User-avatar.png"
+
+    # 更新用戶的頭像字段
+    new_user.profile_image = filename
+    db.commit()
+
+    # 跳轉到登入頁面
+    return RedirectResponse(url="/login", status_code=303)
+
+# 登出帳號
+@router.get("/logout")
+def logout(request: Request):
+    request.session.pop('username', None)
+    request.session.pop('user_avatar', None)
+    return RedirectResponse(url="/", status_code=303)
 
 def hash_password(plain_password: str) -> str:
     """對密碼進行哈希處理"""

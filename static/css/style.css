@@ -96,3 +96,116 @@ h1 {
     color: #333;
     text-align: center; /* 確保標題居中對齊 */
 }
+
+.user-profile {
+    cursor: pointer;
+}
+
+.profile-popup {
+    width: 150px;
+    display: none;
+    position: absolute;
+    top: 100px; /* 距離頂部 50 像素 */
+    right: 50px; /* 距離右邊 50 像素 */
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; /* 圓角 */
+    z-index: 1000; /* 確保顯示在最上層 */
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.profile-header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.profile-popup button {
+    display: block;
+    height: 40px;
+    width: 100%;
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.profile-popup button:hover {
+    background-color: #0056b3;
+}
+
+.content {
+    padding: 20px;
+    margin-top: 180px; /* 確保內容不會被固定的控制中心遮擋 */
+}
+
+table {
+    width: 80%;
+    max-width: 600px;
+    border-collapse: collapse;
+    margin: 0 auto;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+}
+
+td a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+td a:hover {
+    text-decoration: underline;
+}
+
+.inputChoices {
+    list-style: none;
+    padding: 0;
+}
+
+.inputChoices-choice {
+    display: flex;
+    align-items: center;
+}
+
+.inputChoices-choice label {
+    display: flex;
+    align-items: center;
+}
+
+.inputChoices-choice input {
+    margin-right: 10px;
+}
+
+.messages {
+    margin-top: 10px;
+}
+
+.error {
+    margin-left: 20px;
+    color: red;
+}

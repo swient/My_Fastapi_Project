@@ -2,6 +2,8 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from starlette.middleware.sessions import SessionMiddleware
 # database
 from .database import Base, engine
 from .routers import router
@@ -14,19 +16,24 @@ Base.metadata.create_all(bind = engine)
 
 # Register Router
 app.include_router(router=router, prefix="/api", tags=["todos"])
-
+app.include_router(router=router)
 '''
 STATIC FILES
 '''
 
+# 設置 HTML文件夾
 templates = Jinja2Templates(directory="templates")
-
 # 設置靜態文件夾
 app.mount("/static", StaticFiles(directory="static"), name="static")
+# 添加 SessionMiddleware 以啟用會話支持
+app.add_middleware(SessionMiddleware, secret_key="your_secret_key")
 
-@app.get("/")
+# Define routes
+@app.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    username = request.session.get('username')
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("index.html", {"request": request, "username": username, "user_avatar": user_avatar})
 
 @app.get("/minesweeper")
 async def minesweeper(request: Request):

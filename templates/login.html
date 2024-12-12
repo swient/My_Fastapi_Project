@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登入</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="control-bar">
+        <button onclick="location.href='/'">首頁</button>
+        <div class="user-profile" onclick="toggleProfilePopup()">
+            <img src="/static/images/avatar/User-avatar.png" alt="User Avatar">
+        </div>
+    </div>
+    <div class="content">
+        <form method="POST">
+            <table>
+                <tr>
+                    <th colspan="4">Login</th>
+                </tr>
+                <tr>
+                    <td>
+                        <a href="/login">登入</a>
+                        <a href="/register">註冊</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text" placeholder="用戶名" id="username" name="username" required><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="password" placeholder="密碼" id="password" name="password" required><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="submit-container">
+                        <input type="submit" value="Login">
+                        {% if error %}
+                            <a class="error">{{ error }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <ul class="inputChoices">
+                            <li class="inputChoices-choice">
+                                <label class="iconic">
+                                    <input type="checkbox" name="accept" value="1" required="required">
+                                    <i aria-hidden="true"></i>
+                                    <span class="iconic-label">
+                                        我已閱讀並同意<a data-xf-click="overlay">《服務協議》</a> 、 <a data-xf-click="overlay">《隱私政策》</a>、<a data-xf-click="overlay">《用戶公約》</a>、<a data-xf-click="overlay">《免責聲明》</a>、<a data-xf-click="overlay">《授權協議》</a>
+                                    </span>
+                                </label>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>
