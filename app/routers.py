@@ -1,5 +1,6 @@
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from .schemas import TodoCreate, TodoResponse
 from .models import Todo
@@ -58,3 +59,11 @@ def delete_todo(todo_id : int, db : Session = Depends(get_db)):
     db.delete(db_todo)
     db.commit()
     return {"detail" : "Todo deleted successfully"}
+
+def hash_password(plain_password: str) -> str:
+    """對密碼進行哈希處理"""
+    return generate_password_hash(plain_password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """驗證密碼是否匹配"""
+    return check_password_hash(hashed_password, plain_password)
