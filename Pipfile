@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 requests = "*"
-fastapi = "*"
+fastapi = {extras = ["standard"], version = "*"}
 uvicorn = "*"
 sqlalchemy = "*"
 alembic = "*"
