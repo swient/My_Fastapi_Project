@@ -104,7 +104,7 @@ h1 {
 .profile-popup {
     width: 150px;
     display: none;
-    position: absolute;
+    position: fixed;
     top: 100px; /* 距離頂部 50 像素 */
     right: 50px; /* 距離右邊 50 像素 */
     background-color: white;
