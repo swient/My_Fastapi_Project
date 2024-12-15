@@ -35,13 +35,15 @@ async def read_item(request: Request):
     user_avatar = request.session.get('user_avatar', 'User-avatar.png')
     return templates.TemplateResponse("index.html", {"request": request, "username": username, "user_avatar": user_avatar})
 
-@app.get("/minesweeper")
+@app.get("/minesweeper", response_class=HTMLResponse)
 async def minesweeper(request: Request):
-    return templates.TemplateResponse("minesweeper.html", {"request": request})
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("minesweeper.html", {"request": request, "user_avatar": user_avatar})
 
-@app.get("/memory-game")
+@app.get("/memory-game", response_class=HTMLResponse)
 async def memory_game(request: Request):
-    return templates.TemplateResponse("memory-game.html", {"request": request})
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("memory-game.html", {"request": request, "user_avatar": user_avatar})
 
 if __name__ == "__main__":
     import uvicorn
