@@ -2,9 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const boardElement = document.getElementById('board');
   const timerElement = document.getElementById('timer');
   const minesLeftElement = document.getElementById('mines-left');
-  const startButton = document.getElementById('start-btn');
-  const resetButton = document.getElementById('reset-btn');
+  const startButton = document.getElementById('start-button');
+  const resetButton = document.getElementById('reset-button');
   const difficultySelect = document.getElementById('difficulty');
+  const resultPage = document.getElementById('result-page');
+  const resultMessage = document.getElementById('result-message');
+  const resultButton = document.getElementById('result-button');
 
   let board = [];
   let timer = 0;
@@ -42,6 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     mineCount = mines;
     minesLeftElement.textContent = mineCount;
+    // 隱藏結果頁面
+    document.getElementById('result-page').style.display = 'none';
     createBoard();
   }
 
@@ -176,6 +181,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     minesLeftElement.textContent = mineCount;
+
+    // 在棋盤容器上添加事件監聽器，阻止右鍵選單彈出
+    boardElement.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
+    // 在結果介面添加事件監聽器，阻止右鍵選單彈出
+    resultPage.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+    });
   }
 
   function handleMouseOver(e) {
@@ -299,13 +313,21 @@ document.addEventListener('DOMContentLoaded', () => {
     clearInterval(timerInterval);
     resetButton.textContent = win ? '😎' : '😭';
     if (win) {
-      setTimeout(() => alert('恭喜，你贏了！再來一局！'), 10);
+        resultMessage.textContent = '恭喜，你勝利了！';
+        resultMessage.style.color = '#4CAF50';
+        resultButton.style.backgroundColor = '#4CAF50'; // 綠色
+    } else {
+        resultMessage.textContent = '很遺憾，你失敗了！';
+        resultMessage.style.color = '#f44336';
+        resultButton.style.backgroundColor = '#f44336'; // 紅色
     }
+    resultPage.style.display = 'flex';
     gameEnded = true;
   }
 
   startButton.addEventListener('click', initializeGame);
   resetButton.addEventListener('click', initializeGame);
+  resultButton.addEventListener('click', initializeGame);
 
   initializeGame();
 });
