@@ -10,6 +10,7 @@ class Todo(Base):
     description = Column(String, nullable=True)
     completed = Column(Boolean, nullable=False)
     due_date = Column(Date, nullable=True)
+    priority = Column(Integer, default=1)
 
 class User(Base):
     __tablename__ = "users"
