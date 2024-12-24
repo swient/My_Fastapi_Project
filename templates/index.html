@@ -22,8 +22,8 @@
             <button onclick="window.location.href='/register'">註冊</button>
             <button onclick="window.location.href='/login'">登入</button>
         {% else %}
+            <button onclick="window.location.href='/setting'">帳號設置</button>
             <button onclick="window.location.href='/logout'">退出登入</button>
-            <button onclick="editProfile()">修改頭像</button>
         {% endif %}
     </div>
     <div class="game-section">
@@ -61,12 +61,8 @@
                 popup.style.display = "none";
             }
         }
-
-        function editProfile() {
-            // 在這裡添加修改頭像的邏輯
-            alert("修改頭像功能尚未實現");
-        }
     </script>
+    <script src="/static/js/dark-mode.js"></script>
 </body>
 </html>
 

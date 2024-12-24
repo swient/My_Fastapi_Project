@@ -138,6 +138,13 @@ def logout(request: Request):
     request.session.pop('user_avatar', None)
     return RedirectResponse(url="/", status_code=303)
 
+# 設定頁面
+@router.get("/setting")
+def setting(request: Request):
+    username = request.session.get('username')
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("setting.html", {"request": request, "username": username, "user_avatar": user_avatar})
+
 def hash_password(plain_password: str) -> str:
     """對密碼進行哈希處理"""
     return generate_password_hash(plain_password)

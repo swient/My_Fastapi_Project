@@ -9,6 +9,10 @@ body {
     background-color: #f0f0f0;
 }
 
+body.dark-mode {
+    background-color: #333; 
+}
+
 .control-bar {
     display: flex;
     /* 設置寬度 */
@@ -21,12 +25,15 @@ body {
     /* 設置內邊距 */
     padding: 15px;
     background-color: #333;
-    color: white;
     /* 設置圓角 */
     border-radius: 10px;
     /* 固定位置 */
     position: fixed;
     z-index: 1000;
+}
+
+.control-bar.dark-mode {
+    background-color: #f3f3f3;
 }
 
 .control-bar button {
@@ -68,6 +75,10 @@ body {
     align-items: center;
     gap: 10px;
     margin-top: 120px; /* 調整以避免與固定的控制中心重疊 */
+}
+
+.difficulty label, .timer, .mines-left {
+    color: black;
 }
 
 .top-bar, .status-bar {

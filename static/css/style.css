@@ -9,8 +9,8 @@ body {
     background-color: #f3f3f3;
 }
 
-h1 {
-    margin: 20px 0;
+body.dark-mode {
+    background-color: #333; 
 }
 
 .control-bar {
@@ -25,12 +25,15 @@ h1 {
     /* 設置內邊距 */
     padding: 15px;
     background-color: #333;
-    color: white;
     /* 設置圓角 */
     border-radius: 10px;
     /* 固定位置 */
     position: fixed;
     z-index: 1000;
+}
+
+.control-bar.dark-mode {
+    background-color: #f3f3f3;
 }
 
 .control-bar button {
@@ -95,6 +98,10 @@ h1 {
     font-size: 16px;
     color: #333;
     text-align: center; /* 確保標題居中對齊 */
+}
+
+.game-title.dark-mode {
+    color: white;
 }
 
 .user-profile {
