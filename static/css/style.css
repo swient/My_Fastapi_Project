@@ -156,9 +156,8 @@ body.dark-mode {
 
 table {
     width: 80%;
-    max-width: 600px;
     border-collapse: collapse;
-    margin: 0 auto;
+    margin: 20px auto;
     background-color: white;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
@@ -166,7 +165,7 @@ table {
 }
 
 th, td {
-    padding: 15px;
+    padding: 20px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
@@ -187,22 +186,27 @@ td a:hover {
 }
 
 .inputChoices {
-    list-style: none;
-    padding: 0;
-}
-
-.inputChoices-choice {
     display: flex;
     align-items: center;
+    margin-bottom: 10px;
 }
 
-.inputChoices-choice label {
-    display: flex;
-    align-items: center;
-}
-
-.inputChoices-choice input {
+.inputChoices input[type="checkbox"] {
     margin-right: 10px;
+}
+
+.iconic-label {
+    font-size: 18px;
+    color: #333;
+}
+
+.inputChoices a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.inputChoices a:hover {
+    text-decoration: underline;
 }
 
 .messages {
