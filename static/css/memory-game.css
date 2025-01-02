@@ -4,9 +4,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    height: 100vh;
-    margin: 0;
-    background-color: #f0f0f0;
+    background-color: #f3f3f3;
+    zoom: 90%;
 }
 
 body.dark-mode {
@@ -19,8 +18,6 @@ body.dark-mode {
     width: calc(100% - 40px); /* 調整寬度，減去外邊距 */
     justify-content: space-between;
     /* 設置外邊距 */
-    margin-left: 40px;
-    margin-right: 40px;
     margin-top: 10px;
     /* 設置內邊距 */
     padding: 15px;
@@ -70,9 +67,9 @@ body.dark-mode {
 
 iframe {
     width: 80%; /* iframe 宽度 */
-    height: 80%; /* iframe 高度 */
+    height: 80vh; /* iframe 高度 */
     border: none; /* 去除边框 */
-    margin-top: 60px; /* 控制中心高度的额外偏移 */
+    margin-top: 80px; /* 控制中心高度的额外偏移 */
 }
 
 /* 容器，让 iframe 垂直水平居中 */
