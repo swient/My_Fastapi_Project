@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from werkzeug.security import generate_password_hash, check_password_hash
+from fastapi.responses import JSONResponse
 import os
 
 from .schemas import TodoCreate, TodoResponse
@@ -144,6 +145,66 @@ def setting(request: Request):
     username = request.session.get('username')
     user_avatar = request.session.get('user_avatar', 'User-avatar.png')
     return templates.TemplateResponse("setting.html", {"request": request, "username": username, "user_avatar": user_avatar})
+
+@router.post("/change_profile", response_class=HTMLResponse)
+def setting(request: Request, profile_image: UploadFile = File(None), db: Session = Depends(get_db)):
+    username = request.session.get('username')
+    user = db.query(User).filter_by(username=username).first()
+
+    if not user:
+        return JSONResponse({"error": "用戶不存在"}, status_code=400)
+
+    # 更新頭像
+    if profile_image:
+        if not profile_image.filename:
+            return JSONResponse({"error": "請選擇頭像"}, status_code=400)
+        if profile_image.content_type not in ["image/png", "image/jpeg"]:
+            return JSONResponse({"error": "僅支持 PNG 和 JPG 格式的圖片"}, status_code=400)
+
+        ext = ".png" if profile_image.content_type == "image/png" else ".jpg"
+        filename = f"{user.id}{ext}"
+        filepath = os.path.join("static/images/avatar", filename)
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        with open(filepath, "wb") as f:
+            f.write(profile_image.file.read())
+
+        user.profile_image = filename
+
+    # 如果用戶之前沒有頭像，更新為新頭像名稱
+    if user.profile_image == "User-avatar.png":
+        user.profile_image = filename
+
+    db.commit()
+    return JSONResponse({"success": "頭像已更新"}, status_code=200)
+
+@router.post("/change_password", response_class=HTMLResponse)
+def change_password(request: Request, current_password: str = Form(None), new_password: str = Form(None), confirm_password: str = Form(None), db: Session = Depends(get_db)):
+    username = request.session.get('username')
+    user = db.query(User).filter_by(username=username).first()
+
+    if not user:
+        return JSONResponse({"error": "用戶不存在"}, status_code=400)
+
+    # 更改密碼
+    if current_password and new_password and confirm_password:
+        if not verify_password(current_password, user.password):
+            return JSONResponse({"error": "目前密碼不正確"}, status_code=400)
+
+        if new_password != confirm_password:
+            return JSONResponse({"error": "新密碼和確認密碼不匹配"}, status_code=400)
+
+        user.password = hash_password(new_password)
+        
+    else:
+        if not current_password:
+            return JSONResponse({"error": "請輸入密碼"}, status_code=400)
+        if not new_password:
+            return JSONResponse({"error": "請輸入新密碼"}, status_code=400)
+        if not confirm_password:
+            return JSONResponse({"error": "請輸入確認新密碼"}, status_code=400)
+    
+    db.commit()
+    return JSONResponse({"success": "密碼已更新"}, status_code=200)
 
 def hash_password(plain_password: str) -> str:
     """對密碼進行哈希處理"""

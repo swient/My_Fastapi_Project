@@ -63,40 +63,52 @@
             </div>
             <div id="profileSection" class="settings-section">
                 <h2>個人資料</h2>
-                <div class="profile-item">
-                    <label class="profile-label">頭像</label>
-                    <div class="avatar-upload">
-                        <label for="avatarInput">
-                            <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
-                        </label>
-                        <input type="file" id="avatarInput" style="display: none" accept="image/*">
+                <form method="POST" action="/change_profile" enctype="multipart/form-data">
+                    <div class="profile-item">
+                        <label class="profile-label">頭像</label>
+                        <div class="avatar-upload">
+                            <label for="avatarInput">
+                                <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
+                            </label>
+                            <input type="file" id="avatarInput" name="profile_image" style="display: none" accept="image/*">
+                        </div>
                     </div>
-                </div>
-                <div class="profile-item">
-                    <label class="profile-label">用戶名</label>
-                    <span class="username-span">{{ username }}</span>
-                </div>
-                <div class="profile-item">
-                    <label class="profile-label">電子郵件</label>
-                    <input type="email" class="profile-input" id="email" placeholder="請輸入電子郵件">
-                </div>
-                <button class="save-button" onclick="saveSettings()">儲存設定</button>
+                    <div class="profile-item">
+                        <label class="profile-label">用戶名</label>
+                        <span class="username-span">{{ username }}</span>
+                    </div>
+                    <div class="profile-item">
+                        <label class="profile-label">電子郵件</label>
+                        <input type="email" class="profile-input" id="email" placeholder="請輸入電子郵件">
+                    </div>
+                    <div class="container">
+                        <button type="submit" class="save-button">更新資料</button>
+                        <a class="profile-error">{{ error }}</a>
+                        <a class="profile-success">{{ success }}</a>
+                    </div>                    
+                </form>
             </div>
             <div id="passwordSection" class="settings-section">
                 <h2>更改密碼</h2>
-                <div class="profile-item">
-                    <label class="profile-label">目前密碼</label>
-                    <input type="password" class="profile-input" id="currentPassword" placeholder="請輸入目前密碼">
-                </div>
-                <div class="profile-item">
-                    <label class="profile-label">新密碼</label>
-                    <input type="password" class="profile-input" id="newPassword" placeholder="請輸入新密碼">
-                </div>
-                <div class="profile-item">
-                    <label class="profile-label">確認新密碼</label>
-                    <input type="password" class="profile-input" id="confirmPassword" placeholder="請再次輸入新密碼">
-                </div>
-                <button class="save-button" onclick="saveSettings()">儲存設定</button>
+                <form method="POST" action="/change_password" enctype="multipart/form-data">
+                    <div class="profile-item">
+                        <label class="profile-label">目前密碼</label>
+                        <input type="password" class="profile-input" name="current_password" placeholder="請輸入目前密碼">
+                    </div>
+                    <div class="profile-item">
+                        <label class="profile-label">新密碼</label>
+                        <input type="password" class="profile-input" name="new_password" placeholder="請輸入新密碼">
+                    </div>
+                    <div class="profile-item">
+                        <label class="profile-label">確認新密碼</label>
+                        <input type="password" class="profile-input" name="confirm_password" placeholder="請再次輸入新密碼">
+                    </div>
+                    <div class="container">
+                        <button type="submit" class="save-button">更改密碼</button>
+                        <a class="password-error">{{ error }}</a>
+                        <a class="password-success">{{ success }}</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
