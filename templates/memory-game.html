@@ -9,9 +9,22 @@
 <body>
     <div class="control-bar">
         <button onclick="location.href='/'">首頁</button>
-        <div class="user-profile">
+        <div class="user-profile" onclick="toggleProfilePopup()">
             <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
         </div>
+    </div>
+    <div id="profile-popup" class="profile-popup">
+        <div class="profile-header" onclick="toggleProfilePopup()">
+            <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
+            <span>{{ username }}</span>
+        </div>
+        {% if not username %}
+            <button onclick="window.location.href='/register'">註冊</button>
+            <button onclick="window.location.href='/login'">登入</button>
+        {% else %}
+            <button onclick="window.location.href='/setting'">帳號設置</button>
+            <button onclick="window.location.href='/logout'">退出登入</button>
+        {% endif %}
     </div>
     <div class="iframe-container">
         <iframe 
@@ -20,6 +33,16 @@
             allowfullscreen="true">
         </iframe>
     </div>
+    <script>
+        function toggleProfilePopup() {
+            var popup = document.getElementById("profile-popup");
+            if (popup.style.display === "none" || popup.style.display === "") {
+                popup.style.display = "block";
+            } else {
+                popup.style.display = "none";
+            }
+        }
+    </script>
     <script src="/static/js/dark-mode.js"></script>
 </body>
 </html>

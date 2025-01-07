@@ -74,17 +74,19 @@ templates = Jinja2Templates(directory="templates")
 # 登入帳號
 @router.get("/login", response_class=HTMLResponse)
 def login_form(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request, "page_title": "登入"})
+    username = request.session.get('username')
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("login.html", {"request": request, "username": username, "user_avatar": user_avatar})
 
 @router.post("/login", response_class=HTMLResponse)
 def login(request: Request, username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     user = db.query(User).filter_by(username=username).first()
     if user is None:
         error = '用戶不存在'
-        return templates.TemplateResponse("login.html", {"request": request, "page_title": "登入", "error": error})
+        return templates.TemplateResponse("login.html", {"request": request, "error": error})
     elif not verify_password(password, user.password):
         error = '密碼錯誤'
-        return templates.TemplateResponse("login.html", {"request": request, "page_title": "登入", "error": error})
+        return templates.TemplateResponse("login.html", {"request": request, "error": error})
     else:
         request.session['username'] = username
         request.session['user_avatar'] = user.profile_image
@@ -93,20 +95,20 @@ def login(request: Request, username: str = Form(...), password: str = Form(...)
 # 註冊帳號
 @router.get("/register", response_class=HTMLResponse)
 def register_form(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request, "page_title": "註冊"})
+    username = request.session.get('username')
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("register.html", {"request": request, "username": username, "user_avatar": user_avatar})
 
 @router.post("/register", response_class=HTMLResponse)
 def register(request: Request, username: str = Form(...), password: str = Form(...), profile_image: UploadFile = File(None), db: Session = Depends(get_db)):
     # 檢查用戶是否已存在
     if db.query(User).filter_by(username=username).first():
-        return templates.TemplateResponse("register.html", {"request": request, "page_title": "註冊", "error": "用戶名已存在"})
+        return templates.TemplateResponse("register.html", {"request": request, "error": "用戶名已存在"})
 
     # 檢查圖片格式（如果有上傳圖片）
     if profile_image and profile_image.filename:  # 確保有選擇文件
         if profile_image.content_type not in ["image/png", "image/jpeg"]:
-            return templates.TemplateResponse(
-                "register.html", {"request": request, "page_title": "註冊", "error": "僅支持 PNG 和 JPG 格式的圖片"}
-            )
+            return templates.TemplateResponse("register.html", {"request": request, "error": "僅支持 PNG 和 JPG 格式的圖片"})
 
     # 創建新用戶
     new_user = User(username=username, password=hash_password(password))
