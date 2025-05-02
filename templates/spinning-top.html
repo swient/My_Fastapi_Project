@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>踩地雷</title>
+    <title>陀螺遊戲</title>
     <link rel="stylesheet" href="/static/css/control-bar.css">
-    <link rel="stylesheet" href="/static/css/minesweeper.css">
+    <link rel="stylesheet" href="/static/css/spinning-top.css">
 </head>
 <body>
     <div class="control-bar">
@@ -32,25 +32,26 @@
             <div class="difficulty">
                 <label for="difficulty">難度：</label>
                 <select id="difficulty">
-                <option value="easy">簡單 (10x10)</option>
-                <option value="medium">中等 (10x20)</option>
-                <option value="hard">困難 (15x25)</option>
+                    <option value="easy">簡單</option>
+                    <option value="medium">中等</option>
+                    <option value="hard">困難</option>
                 </select>
             </div>
             <button id="start-button">開始遊戲</button>
         </div>
         <div class="status-bar">
             <div class="timer">時間：<span id="timer">0</span> 秒</div>
-            <div class="mines-left">剩餘地雷：<span id="mines-left">0</span></div>
+            <div class="score">分數：<span id="score">0</span></div>
         </div>
-        <div>
-            <button id="reset-button" class="face"></button>
+        <div class="spinning-top-area">
+            <img id="spinning-top-img" src="/static/images/game/Spinning-top.png" alt="Spinning Top">
+            <button id="spin-button">旋轉！</button>
         </div>
-        <div id="board" class="board"></div>
     </div>
     <div id="result-page" class="result-page" style="display: none;">
         <h1 id="result-message"></h1>
-        <button id="result-button">重新開始</button>
+    <div id="best-score"></div>
+    <button id="result-button">再玩一次</button>
     </div>
     <script>
         function toggleProfilePopup() {
@@ -62,7 +63,7 @@
             }
         }
     </script>
-    <script src="/static/js/minesweeper.js"></script>
+    <script src="/static/js/spinning-top.js"></script>
     <script src="/static/js/dark-mode.js"></script>
 </body>
 </html>
