@@ -6,6 +6,7 @@
   // 遊戲狀態
   let tableau, foundations, stock, waste, movesStack, redoStack;
   let timer = 0, timerInterval = null;
+  let score = 0;
 
   // 拖曳相關全域變數
   let dragInfo = null;
@@ -26,28 +27,68 @@
 
   // 遊戲初始化
   function setupGame() {
-    let deck = createDeck();
-    shuffle(deck);
-    tableau = Array.from({ length: 7 }, (_, i) =>
-      Array.from({ length: i + 1 }, (_, j) => {
-        const card = deck.pop();
-        card.faceUp = j === i;
-        return card;
-      })
-    );
-    stock = deck;
-    waste = [];
-    foundations = [[], [], [], []];
-    movesStack = [];
-    redoStack = [];
+    let solvable = false;
+    while (!solvable) {
+      let deck = createDeck();
+      shuffle(deck);
+      tableau = Array.from({ length: 7 }, (_, i) =>
+        Array.from({ length: i + 1 }, (_, j) => {
+          const card = deck.pop();
+          card.faceUp = j === i;
+          return card;
+        })
+      );
+      stock = deck;
+      waste = [];
+      foundations = [[], [], [], []];
+      movesStack = [];
+      redoStack = [];
+      solvable = isSolvable();
+    }
     resetTimer();
+    score = 0;
     render();
+
+    document.getElementById('result-page').style.display = 'none';
+    document.getElementById('reset-button').disabled = false;
   }
 
-  // 判斷是否有解（簡化）
+  // 快速判斷是否有解
   function isSolvable() {
+    // 1. 最上層有A可直接進Foundation
     const tops = tableau.map(col => col[col.length - 1]).filter(Boolean);
-    return tops.some(card => card.rank === 'A' || card.rank === 'K');
+    if (tops.some(card => card.rank === 'A')) return true;
+
+    // 2. 計算可移動到Foundation的牌數
+    let movableToFoundation = 0;
+    for (let i = 0; i < tops.length; i++) {
+      if (tops[i].rank === 'A') movableToFoundation++;
+      if (tops[i].rank === '2' && foundations.some(f => f.length && f[f.length-1].rank === 'A' && f[f.length-1].suit === tops[i].suit)) movableToFoundation++;
+    }
+    if (movableToFoundation >= 2) return true;
+
+    // 3. 檢查紅黑交錯且連號的可移動性
+    let movableStack = false;
+    for (let i = 0; i < tableau.length; i++) {
+      const col = tableau[i];
+      if (col.length < 2) continue;
+      const top = col[col.length - 1];
+      const below = col[col.length - 2];
+      if (top.faceUp && below.faceUp && isRed(top.suit) !== isRed(below.suit) &&
+          ranks.indexOf(below.rank) === ranks.indexOf(top.rank) + 1) {
+        movableStack = true;
+        break;
+      }
+    }
+    if (movableStack) return true;
+
+    // 4. 蓋著的牌比例過高則判為難解
+    const totalCards = tableau.reduce((sum, col) => sum + col.length, 0);
+    const faceDownCards = tableau.reduce((sum, col) => sum + col.filter(card => !card.faceUp).length, 0);
+    if (faceDownCards / totalCards > 0.7) return false;
+
+    // 5. 預設：有A或可移動堆疊或蓋牌比例不高則判為可解
+    return true;
   }
 
   // 渲染 UI
@@ -58,10 +99,13 @@
         tableau: JSON.parse(JSON.stringify(tableau)),
         foundations: JSON.parse(JSON.stringify(foundations)),
         stock: JSON.parse(JSON.stringify(stock)),
-        waste: JSON.parse(JSON.stringify(waste))
+        waste: JSON.parse(JSON.stringify(waste)),
+        score: score
       });
       if (movesStack.length > 100) movesStack.shift();
     }
+    // 分數顯示
+    document.getElementById('score').textContent = score;
     // 控制按鈕
     const undoBtn = document.getElementById('undo-button');
     if (undoBtn) undoBtn.disabled = movesStack.length <= 1;
@@ -194,27 +238,62 @@
     if (!card.faceUp) return;
     const moving = col.slice(cardIdx);
     if (moving.some(c => !c.faceUp)) return;
+
+    // 取得起點卡牌 DOM
+    const tableauDiv = document.getElementById('tableau');
+    const colDiv = tableauDiv.children[colIdx];
+    const cardDiv = colDiv.children[cardIdx];
+
+    // 移動到 foundation
     if (moving.length === 1) {
       for (let i = 0; i < 4; i++) {
         if (canMoveToFoundation(card, i)) {
+          const targetDiv = document.getElementById('foundation' + i);
+          // 先同步更新資料與 DOM
           foundations[i].push(tableau[colIdx].pop());
+          score += 10; // 移到 foundation 加分
           if (tableau[colIdx].length && !tableau[colIdx][tableau[colIdx].length - 1].faceUp) {
             tableau[colIdx][tableau[colIdx].length - 1].faceUp = true;
+            score += 5; // 翻開新牌加分
           }
-          render();
-          checkWin();
+          // 執行動畫
+          animateCardMove(cardDiv, targetDiv, card, () => {
+            render();
+            checkWin();
+          });
           return;
         }
       }
     }
+
+    // 移動到其他 tableau
     for (let i = 0; i < 7; i++) {
       if (i !== colIdx && canMoveToTableau(moving[0], i)) {
+        // 目標位置：目標疊最後一張牌，若無則該疊 colDiv
+        const tableauDiv2 = document.getElementById('tableau');
+        const targetColDiv = tableauDiv2.children[i];
+        let targetCardDiv = null;
+        let tableauOffset = 0;
+        if (targetColDiv.children.length > 0) {
+          targetCardDiv = targetColDiv.children[targetColDiv.children.length - 1];
+          let zoom = 1;
+          const bodyStyle = window.getComputedStyle(document.body);
+          if (bodyStyle.zoom) zoom = parseFloat(bodyStyle.zoom);
+          tableauOffset = 30 / zoom;
+        } else {
+          targetCardDiv = targetColDiv;
+          tableauOffset = 0;
+        }
+        // 先同步更新資料與 DOM
         tableau[i].push(...moving);
         tableau[colIdx] = col.slice(0, cardIdx);
         if (tableau[colIdx].length && !tableau[colIdx][tableau[colIdx].length - 1].faceUp) {
           tableau[colIdx][tableau[colIdx].length - 1].faceUp = true;
         }
-        render();
+        // 執行動畫
+        animateCardMove(cardDiv, targetCardDiv, moving[0], () => {
+          render();
+        }, tableauOffset, moving);
         return;
       }
     }
@@ -249,18 +328,47 @@
   function onWasteClick() {
     if (!waste.length) return;
     const card = waste[waste.length - 1];
+    // 取得 waste 卡牌 DOM
+    const wasteDiv = document.getElementById('waste');
+    const cardDiv = wasteDiv.querySelector('.card.face-up');
+    // 移動到 foundation
     for (let i = 0; i < 4; i++) {
       if (canMoveToFoundation(card, i)) {
+        const targetDiv = document.getElementById('foundation' + i);
+        // 先同步更新資料與 DOM
         foundations[i].push(waste.pop());
-        render();
-        checkWin();
+        score += 10;
+        // 執行動畫
+        animateCardMove(cardDiv, targetDiv, card, () => {
+          render();
+          checkWin();
+        });
         return;
       }
     }
+    // 移動到 tableau
     for (let i = 0; i < 7; i++) {
       if (canMoveToTableau(card, i)) {
+        const tableauDiv = document.getElementById('tableau');
+        const targetColDiv = tableauDiv.children[i];
+        let targetCardDiv = null;
+        let tableauOffset = 0;
+        if (targetColDiv.children.length > 0) {
+          targetCardDiv = targetColDiv.children[targetColDiv.children.length - 1];
+          let zoom = 1;
+          const bodyStyle = window.getComputedStyle(document.body);
+          if (bodyStyle.zoom) zoom = parseFloat(bodyStyle.zoom);
+          tableauOffset = 30 / zoom;
+        } else {
+          targetCardDiv = targetColDiv;
+          tableauOffset = 0;
+        }
+        // 先同步更新資料與 DOM
         tableau[i].push(waste.pop());
-        render();
+        // 執行動畫
+        animateCardMove(cardDiv, targetCardDiv, card, () => {
+          render();
+        }, tableauOffset);
         return;
       }
     }
@@ -270,18 +378,47 @@
     if (!timerInterval) startTimer();
     if (!foundations[foundationIdx].length) return;
     const card = foundations[foundationIdx][foundations[foundationIdx].length - 1];
+    // 取得 foundation 卡牌 DOM
+    const foundationDiv = document.getElementById('foundation' + foundationIdx);
+    const cardDiv = foundationDiv.querySelector('.card.face-up');
+    // 移動到 tableau
     for (let i = 0; i < 7; i++) {
       if (canMoveToTableau(card, i)) {
+        const tableauDiv = document.getElementById('tableau');
+        const targetColDiv = tableauDiv.children[i];
+        let targetCardDiv = null;
+        let tableauOffset = 0;
+        if (targetColDiv.children.length > 0) {
+          targetCardDiv = targetColDiv.children[targetColDiv.children.length - 1];
+          let zoom = 1;
+          const bodyStyle = window.getComputedStyle(document.body);
+          if (bodyStyle.zoom) zoom = parseFloat(bodyStyle.zoom);
+          tableauOffset = 30 / zoom;
+        } else {
+          targetCardDiv = targetColDiv;
+          tableauOffset = 0;
+        }
+        // 先同步更新資料與 DOM
         tableau[i].push(foundations[foundationIdx].pop());
-        render();
+        score -= 10; // 從 foundation 移回 tableau 扣分
+        // 執行動畫
+        animateCardMove(cardDiv, targetCardDiv, card, () => {
+          render();
+        }, tableauOffset);
         return;
       }
     }
+    // 移動到其他 foundation
     for (let i = 0; i < 4; i++) {
       if (i !== foundationIdx && canMoveToFoundation(card, i)) {
+        const targetDiv = document.getElementById('foundation' + i);
+        // 先同步更新資料與 DOM
         foundations[i].push(foundations[foundationIdx].pop());
-        render();
-        checkWin();
+        // 執行動畫
+        animateCardMove(cardDiv, targetDiv, card, () => {
+          render();
+          checkWin();
+        });
         return;
       }
     }
@@ -307,6 +444,7 @@
           if (canMoveToFoundation(card, j)) {
             foundations[j].push(col.pop());
             moved = true;
+            score += 10;
             render();
             setTimeout(autoFinish, 120);
             return;
@@ -320,6 +458,7 @@
         if (canMoveToFoundation(card, j)) {
           foundations[j].push(waste.pop());
           moved = true;
+          score += 10;
           render();
           setTimeout(autoFinish, 120);
           return;
@@ -356,7 +495,7 @@
 
   function showResult() {
     stopTimer();
-    document.getElementById('result-message').textContent = `恭喜完成接龍！總時間：${timer} 秒`;
+    document.getElementById('result-message').textContent = `恭喜完成接龍！總時間：${timer} 秒，總分數：${score} 分`;
     document.getElementById('result-page').style.display = 'flex';
   }
 
@@ -369,6 +508,8 @@
       foundations = JSON.parse(JSON.stringify(prev.foundations));
       stock = JSON.parse(JSON.stringify(prev.stock));
       waste = JSON.parse(JSON.stringify(prev.waste));
+      score = prev.score ?? 0;
+      score -= 5; // 重作扣5分
       render(true);
     }
   }
@@ -380,6 +521,7 @@
       foundations = JSON.parse(JSON.stringify(next.foundations));
       stock = JSON.parse(JSON.stringify(next.stock));
       waste = JSON.parse(JSON.stringify(next.waste));
+      score = next.score ?? 0;
       render(true);
     }
   }
@@ -397,7 +539,7 @@
     cards.forEach((card, idx) => {
       const cardDiv = document.createElement('div');
       cardDiv.className = 'card face-up dragging-card';
-      cardDiv.style.position = 'absolute';
+      cardDiv.style.position = 'fixed';
       cardDiv.style.left = '0px';
       cardDiv.style.top = (idx * 30) + 'px';
       cardDiv.style.width = '90px';
@@ -433,6 +575,99 @@
       if (bodyStyle.zoom) zoom = parseFloat(bodyStyle.zoom);
       dragImage.style.transform = `translate3d(${(x - dragInfo.offsetX) / zoom}px, ${(y - dragInfo.offsetY) / zoom}px, 0)`;
     }
+  }
+
+  // 卡牌點擊移動動畫
+  function animateCardMove(cardElem, targetElem, cardData, callback, tableauOffset = 0, movingCards = null) {
+    // 取得縮放倍率
+    let zoom = 1;
+    const bodyStyle = window.getComputedStyle(document.body);
+    if (bodyStyle.zoom) zoom = parseFloat(bodyStyle.zoom);
+
+    // 起點座標（加上 scroll，並除以 zoom）
+    const startRect = cardElem.getBoundingClientRect();
+    const scrollX = window.scrollX || window.pageXOffset;
+    const scrollY = window.scrollY || window.pageYOffset;
+    const startLeft = (startRect.left + scrollX) / zoom;
+    const startTop = (startRect.top + scrollY) / zoom;
+
+    // 終點座標（加上 scroll，並除以 zoom）
+    const targetRect = targetElem.getBoundingClientRect();
+    let targetLeft = (targetRect.left + scrollX) / zoom;
+    let targetTop = (targetRect.top + scrollY) / zoom + tableauOffset / zoom;
+
+    // 判斷是否為多張卡牌動畫
+    let animCards = [];
+    let total = 1;
+    if (Array.isArray(movingCards) && movingCards.length > 1) {
+      total = movingCards.length;
+      for (let i = 0; i < movingCards.length; i++) {
+        const cardDiv = createCardDiv(movingCards[i], i, null, 'tableau');
+        cardDiv.style.position = 'absolute';
+        cardDiv.style.left = startLeft + 'px';
+        cardDiv.style.top = (startTop + i * 30) + 'px';
+        cardDiv.style.width = startRect.width / zoom + 'px';
+        cardDiv.style.height = startRect.height / zoom + 'px';
+        cardDiv.style.margin = '0';
+        cardDiv.style.zIndex = 9999 + i;
+        cardDiv.style.pointerEvents = 'none';
+        animCards.push(cardDiv);
+        document.body.appendChild(cardDiv);
+      }
+    } else {
+      // 單張卡牌動畫
+      const animCard = cardElem.cloneNode(true);
+      animCard.style.position = 'absolute';
+      animCard.style.left = startLeft + 'px';
+      animCard.style.top = startTop + 'px';
+      animCard.style.width = startRect.width / zoom + 'px';
+      animCard.style.height = startRect.height / zoom + 'px';
+      animCard.style.margin = '0';
+      animCard.style.zIndex = 9999;
+      animCard.style.pointerEvents = 'none';
+      animCards.push(animCard);
+      document.body.appendChild(animCard);
+    }
+
+    // 動態計算動畫時間（速度：每秒 600px）
+    const dx = targetLeft - startLeft;
+    const dy = targetTop - startTop;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+    const speed = 1000; // px/s
+    const duration = Math.max(0.15, distance / speed); // 最短 0.15s
+
+    // 強制 reflow
+    animCards.forEach(card => card.getBoundingClientRect());
+    // 動畫開始時隱藏原卡牌
+    if (Array.isArray(movingCards)) {
+      movingCards.forEach(card => {
+        let selector = `.card.face-up[data-suit="${card.suit}"]`;
+        let candidates = Array.from(document.querySelectorAll(selector));
+        let match = candidates.find(div => div.textContent.includes(card.rank));
+        if (match) match.classList.add('invisible');
+      });
+    } else if (cardElem) {
+      cardElem.classList.add('invisible');
+    }
+
+    // 設定動畫終點
+    requestAnimationFrame(() => {
+      animCards.forEach((card, i) => {
+        card.style.left = targetLeft + 'px';
+        card.style.top = (targetTop + i * 30) + 'px';
+        card.style.transition = `left ${duration}s linear, top ${duration}s linear`;
+      });
+    });
+
+    // 動畫結束
+    let finished = 0;
+    animCards.forEach(card => {
+      card.addEventListener('transitionend', () => {
+        card.remove();
+        finished++;
+        if (finished === total && callback) callback();
+      }, { once: true });
+    });
   }
 
   function onCardMouseDown(e, area, colIdx, cardIdx) {
@@ -477,13 +712,20 @@
     if (!dragInfo.dragging) {
       if (Math.abs(dx) > threshold || Math.abs(dy) > threshold) {
         dragInfo.dragging = true;
+        // 拖曳時隱藏原卡牌
+        dragInfo.cards.forEach(card => {
+          let selector = `.card.face-up[data-suit="${card.suit}"]`;
+          let candidates = Array.from(document.querySelectorAll(selector));
+          let match = candidates.find(div => div.textContent.includes(card.rank));
+          if (match) match.classList.add('invisible');
+        });
         dragImage = createDragImage(dragInfo.cards);
         document.body.appendChild(dragImage);
         setFoundationPointer(true);
-        moveDragImage(e.pageX, e.pageY);
+        moveDragImage(e.clientX, e.clientY);
       }
     } else {
-      moveDragImage(e.pageX, e.pageY);
+      moveDragImage(e.clientX, e.clientY);
     }
   }
   
@@ -500,6 +742,15 @@
   }
 
   function onCardMouseUp(e) {
+    // 拖曳結束顯示原卡牌
+    if (dragInfo && dragInfo.cards) {
+      dragInfo.cards.forEach(card => {
+        let selector = `.card.face-up[data-suit="${card.suit}"]`;
+        let candidates = Array.from(document.querySelectorAll(selector));
+        let match = candidates.find(div => div.textContent.includes(card.rank));
+        if (match) match.classList.remove('invisible');
+      });
+    }
     document.body.style.userSelect = '';
     window.removeEventListener('mousemove', onCardMouseMove);
     window.removeEventListener('mouseup', onCardMouseUp);
