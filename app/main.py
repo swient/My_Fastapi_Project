@@ -53,6 +53,12 @@ async def memory_game(request: Request):
     user_avatar = request.session.get('user_avatar', 'User-avatar.png')
     return templates.TemplateResponse("spinning-top.html", {"request": request, "username": username, "user_avatar": user_avatar})
 
+@app.get("/solitaire", response_class=HTMLResponse)
+async def memory_game(request: Request):
+    username = request.session.get('username')
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("solitaire.html", {"request": request, "username": username, "user_avatar": user_avatar})
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
