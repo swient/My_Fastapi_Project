@@ -2,7 +2,7 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
 from starlette.middleware.sessions import SessionMiddleware
 # database
 from .database import Base, engine
@@ -29,6 +29,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.add_middleware(SessionMiddleware, secret_key="your_secret_key")
 
 # Define routes
+@app.get("/favicon.ico")
+async def favicon():
+    return FileResponse("static/images/favicon.ico")
+
 @app.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
     username = request.session.get('username')
@@ -48,13 +52,13 @@ async def memory_game(request: Request):
     return templates.TemplateResponse("memory-game.html", {"request": request, "username": username, "user_avatar": user_avatar})
 
 @app.get("/spinning-top", response_class=HTMLResponse)
-async def memory_game(request: Request):
+async def spinning_top(request: Request):
     username = request.session.get('username')
     user_avatar = request.session.get('user_avatar', 'User-avatar.png')
     return templates.TemplateResponse("spinning-top.html", {"request": request, "username": username, "user_avatar": user_avatar})
 
 @app.get("/solitaire", response_class=HTMLResponse)
-async def memory_game(request: Request):
+async def solitaire(request: Request):
     username = request.session.get('username')
     user_avatar = request.session.get('user_avatar', 'User-avatar.png')
     return templates.TemplateResponse("solitaire.html", {"request": request, "username": username, "user_avatar": user_avatar})
