@@ -33,80 +33,32 @@ body.dark-mode {
   font-size: 20px;
 }
 
+.top-bar img {
+  height: 40px;
+}
+
 .top-bar button {
   padding: 10px 20px;
-  background-color: #fff;
+  background-color: #007bff;
+  color: white;
+  border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.top-bar #difficulty {
-  padding: 4px 10px;
-  font-size: 16px;
-  border: 2px solid #444;
-  border-radius: 8px;
-}
-
-.board {
-  display: grid;
-  gap: 2px;
-  background-color: #ddd;
-  padding: 3px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px #bbb;
-}
-
-.cell {
-  width: 50px;
-  height: 50px;
+#snake-board {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #ccc;
-  border: 0px solid #999;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  user-select: none;
 }
 
-.cell.flagged {
-  color: red;
-  font-size: 1.2em;
-}
-
-.cell.hover {
-  background-color: lightcyan;
-}
-
-.cell.revealed {
-  background-color: #eee;
-  cursor: default;
-}
-
-.cell.corner-top-left {
-  border-top-left-radius: 12px;
-}
-
-.cell.corner-top-right {
-  border-top-right-radius: 12px;
-}
-
-.cell.corner-bottom-left {
-  border-bottom-left-radius: 12px;
-}
-
-.cell.corner-bottom-right {
-  border-bottom-right-radius: 12px;
-}
-
-.face {
-  font-size: 24px;
-  padding: 5px;
+#snake-game {
   background: none;
-  border: none;
-  cursor: pointer;
+  border: 3px solid #1976d2;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #bbb;
+  margin: 0 auto;
+  display: block;
 }
 
 .result-page {
@@ -126,14 +78,16 @@ body.dark-mode {
 
 .result-page h1 {
   margin-bottom: 20px;
-  font-size: 36px; /* 放大文字 */
-  font-weight: bold; /* 加粗文字 */
+  font-size: 36px;
+  font-weight: bold;
+  color: #4caf50;
 }
 
 .result-page button {
   padding: 15px 30px;
   font-size: 18px;
   color: white;
+  background: #4caf50;
   border: none;
   border-radius: 5px;
   cursor: pointer;

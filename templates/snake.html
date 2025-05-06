@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>登入</title>
+    <title>貪吃蛇</title>
     <link rel="stylesheet" href="/static/css/control-bar.css" />
-    <link rel="stylesheet" href="/static/css/auth.css" />
+    <link rel="stylesheet" href="/static/css/snake.css" />
   </head>
   <body>
     <div class="control-bar">
@@ -27,45 +27,26 @@
       <button onclick="window.location.href='/logout'">退出登入</button>
       {% endif %}
     </div>
-    <div class="content">
-      <form method="POST" class="register-form">
-        <div class="form-top">
-          <h2>登入</h2>
-          <div class="form-links">
-            <a href="/login">登入</a>
-            <a href="/register">註冊</a>
-          </div>
-        </div>
-        <div class="form-bottom">
-          <div class="form-group">
-            <label for="username">用戶名</label>
-            <input
-              type="text"
-              placeholder="用戶名"
-              id="username"
-              name="username"
-              autocomplete="username"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="password">密碼</label>
-            <input
-              type="password"
-              placeholder="密碼"
-              id="password"
-              name="password"
-              required
-            />
-          </div>
-          <div class="form-group submit-container">
-            <input type="submit" value="Login" />
-            {% if error %}
-            <a class="error">{{ error }}</a>
-            {% endif %}
-          </div>
-        </div>
-      </form>
+    <div class="game-container">
+      <div class="top-bar">
+        <img src="/static/images/game/Snake.png" alt="Snake" />
+        <span>貪吃蛇 Snake</span>
+        <button id="reset-button">重新開始</button>
+      </div>
+      <div class="status-bar">
+        <div class="timer">時間：<span id="timer">0</span> 秒</div>
+        <div class="score">分數：<span id="score">0</span></div>
+      </div>
+      <div
+        id="snake-board"
+        style="display: flex; justify-content: center; margin-top: 16px"
+      >
+        <canvas id="snake-game" width="600" height="600"></canvas>
+      </div>
+    </div>
+    <div id="result-page" class="result-page" style="display: none">
+      <h1 id="result-message"></h1>
+      <button id="result-button">再玩一次</button>
     </div>
     <script>
       function toggleProfilePopup() {
@@ -77,6 +58,7 @@
         }
       }
     </script>
+    <script src="/static/js/snake.js"></script>
     <script src="/static/js/dark-mode.js"></script>
   </body>
 </html>

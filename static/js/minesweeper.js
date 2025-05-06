@@ -56,6 +56,22 @@ function createBoard() {
     for (let j = 0; j < cols; j++) {
       const cell = document.createElement("div");
       cell.classList.add("cell");
+      // 左上角
+      if (i === 0 && j === 0) {
+        cell.classList.add("corner-top-left");
+      }
+      // 右上角
+      if (i === 0 && j === cols - 1) {
+        cell.classList.add("corner-top-right");
+      }
+      // 左下角
+      if (i === rows - 1 && j === 0) {
+        cell.classList.add("corner-bottom-left");
+      }
+      // 右下角
+      if (i === rows - 1 && j === cols - 1) {
+        cell.classList.add("corner-bottom-right");
+      }
       cell.dataset.row = i;
       cell.dataset.col = j;
 

@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>登入</title>
+    <title>井字棋 Tic Tac Toe</title>
     <link rel="stylesheet" href="/static/css/control-bar.css" />
-    <link rel="stylesheet" href="/static/css/auth.css" />
+    <link rel="stylesheet" href="/static/css/tic-tac-toe.css" />
   </head>
   <body>
     <div class="control-bar">
@@ -27,45 +27,22 @@
       <button onclick="window.location.href='/logout'">退出登入</button>
       {% endif %}
     </div>
-    <div class="content">
-      <form method="POST" class="register-form">
-        <div class="form-top">
-          <h2>登入</h2>
-          <div class="form-links">
-            <a href="/login">登入</a>
-            <a href="/register">註冊</a>
-          </div>
-        </div>
-        <div class="form-bottom">
-          <div class="form-group">
-            <label for="username">用戶名</label>
-            <input
-              type="text"
-              placeholder="用戶名"
-              id="username"
-              name="username"
-              autocomplete="username"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="password">密碼</label>
-            <input
-              type="password"
-              placeholder="密碼"
-              id="password"
-              name="password"
-              required
-            />
-          </div>
-          <div class="form-group submit-container">
-            <input type="submit" value="Login" />
-            {% if error %}
-            <a class="error">{{ error }}</a>
-            {% endif %}
-          </div>
-        </div>
-      </form>
+    <div class="game-container">
+      <div class="top-bar">
+        <img src="/static/images/game/Tic-Tac-Toe.png" alt="Tic Tac Toe" />
+        <span>井字棋 Tic Tac Toe</span>
+        <button id="reset-button">重新開始</button>
+      </div>
+      <div class="status-bar">
+        <span id="turn">輪到：X(玩家)</span>
+        <span id="player-score">玩家勝場：0</span>
+        <span id="computer-score">電腦勝場：0</span>
+      </div>
+      <div id="tic-tac-toe-board" class="tic-tac-toe-board"></div>
+    </div>
+    <div id="result-page" class="result-page" style="display: none">
+      <h1 id="result-message"></h1>
+      <button id="result-button">繼續遊戲</button>
     </div>
     <script>
       function toggleProfilePopup() {
@@ -77,6 +54,7 @@
         }
       }
     </script>
+    <script src="/static/js/tic-tac-toe.js"></script>
     <script src="/static/js/dark-mode.js"></script>
   </body>
 </html>

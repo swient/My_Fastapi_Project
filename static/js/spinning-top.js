@@ -1,4 +1,4 @@
-// 陀螺穩定區間遊戲主程式
+// 陀螺遊戲主程式
 const difficultyWidthMap = {
   easy: 40,
   medium: 35,
@@ -49,8 +49,9 @@ function initUI() {
   const targetBoxElem = document.createElement("div");
   targetBoxElem.id = "target-box";
   targetBoxElem.style.position = "absolute";
-  targetBoxElem.style.top = "0";
-  targetBoxElem.style.height = "100%";
+  targetBoxElem.style.top = "50%";
+  targetBoxElem.style.transform = "translateY(-50%)";
+  targetBoxElem.style.height = "calc(100% - 4px)";
   targetBoxElem.style.background = "rgba(0,123,255,0.25)";
   targetBoxElem.style.border = "2px solid #007bff";
   targetBoxElem.style.borderRadius = "10px";
@@ -66,7 +67,7 @@ function initUI() {
   barWrap.appendChild(energyBarElem);
 
   const area = document.querySelector(".spinning-top-area");
-  area.parentNode.insertBefore(barWrap, area);
+  area.insertBefore(barWrap, area.firstChild);
 }
 
 // 能量條更新

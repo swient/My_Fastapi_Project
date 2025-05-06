@@ -46,6 +46,10 @@ body.dark-mode {
   align-items: center;
   margin: 40px 0 20px 0;
   gap: 60px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px #bbb;
+  padding: 50px;
 }
 
 #spinning-top-img {

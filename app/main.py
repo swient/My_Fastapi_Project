@@ -63,6 +63,18 @@ async def solitaire(request: Request):
     user_avatar = request.session.get('user_avatar', 'User-avatar.png')
     return templates.TemplateResponse("solitaire.html", {"request": request, "username": username, "user_avatar": user_avatar})
 
+@app.get("/snake", response_class=HTMLResponse)
+async def snake(request: Request):
+    username = request.session.get('username')
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("snake.html", {"request": request, "username": username, "user_avatar": user_avatar})
+
+@app.get("/tic-tac-toe", response_class=HTMLResponse)
+async def tic_tac_toe(request: Request):
+    username = request.session.get('username')
+    user_avatar = request.session.get('user_avatar', 'User-avatar.png')
+    return templates.TemplateResponse("tic-tac-toe.html", {"request": request, "username": username, "user_avatar": user_avatar})
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
