@@ -1,0 +1,153 @@
+body {
+  font-family: "Segoe UI", "Microsoft JhengHei", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.content {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-form {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  border: 1px solid #007bff;
+  box-shadow: 0 4px 24px rgba(0, 60, 180, 0.08);
+  max-width: 380px;
+  width: 100%;
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-top {
+  background: #007bff;
+  color: #fff;
+  padding: 18px 18px 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top-left-radius: 17px;
+  border-top-right-radius: 17px;
+}
+
+.form-top h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.form-links {
+  display: flex;
+}
+
+.form-links a {
+  color: #fff;
+  padding: 4px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.form-links a:hover {
+  text-decoration: underline;
+}
+
+.form-bottom {
+  padding: 28px 32px 32px 32px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 1rem;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"],
+.form-group input[type="file"] {
+  padding: 10px 12px;
+  border: 1.5px solid #b3c6e6;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: #f8fbff;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="file"]:focus {
+  border-color: #007bff;
+}
+
+.submit-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+input[type="submit"] {
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+input[type="submit"]:hover {
+  background: #0056b3;
+}
+
+a.error {
+  color: #d32f2f;
+  font-size: 0.98rem;
+  margin-top: 2px;
+  text-align: left;
+}
+
+.inputChoices {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.98rem;
+  color: #007bff;
+}
+
+.inputChoices a {
+  color: #007bff;
+  text-decoration: underline;
+  margin: 0 2px;
+}
+
+@media (max-width: 500px) {
+  .register-form {
+    max-width: 98vw;
+    padding: 0;
+  }
+  .form-top,
+  .form-bottom {
+    padding: 18px 8vw;
+  }
+}

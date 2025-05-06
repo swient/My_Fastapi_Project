@@ -1,75 +1,85 @@
 .control-bar {
-    display: flex;
-    width: calc(100% - 40px);
-    justify-content: space-between;
-    margin-top: 10px;
-    padding: 15px;
-    background-color: #333;
-    border-radius: 10px;
-    position: fixed;
-    z-index: 1000;
+  display: flex;
+  width: calc(100% - 40px);
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 15px;
+  background-color: #333;
+  border-radius: 10px;
+  position: fixed;
+  z-index: 1000;
 }
+
 .control-bar.dark-mode {
-    background-color: #f3f3f3;
+  background-color: #f3f3f3;
 }
+
 .control-bar button {
-    background-color: #444;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
+  background-color: #444;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
 }
+
 .control-bar button:active {
-    background-color: #457aa0;
+  background-color: #457aa0;
 }
+
 .control-bar .user-profile {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
+
 .control-bar .user-profile img {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
 }
+
 .profile-popup {
-    width: 150px;
-    display: none;
-    position: fixed;
-    top: 100px;
-    right: 50px;
-    background-color: snow;
-    border: 1px solid #ccc;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    z-index: 1000;
+  width: 150px;
+  display: none;
+  position: fixed;
+  top: 100px;
+  right: 50px;
+  background-color: snow;
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  z-index: 1000;
 }
+
 .profile-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
+
 .profile-header img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
+
 .profile-popup button {
-    display: block;
-    height: 40px;
-    width: 100%;
-    margin: 5px 0;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 10px;
+  display: block;
+  height: 40px;
+  width: 100%;
+  margin: 5px 0;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;
 }
+
 .profile-popup button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }

@@ -1,118 +1,49 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    background-color: #f3f3f3;
-    zoom: 90%;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #f3f3f3;
+  zoom: 90%;
 }
 
 body.dark-mode {
-    background-color: #333; 
+  background-color: #333;
 }
 
 .game-section {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 30px; /* 調整圖片之間的間距 */
-    margin-top: 120px; /* 調整以避免與固定的控制中心重疊 */
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 120px;
 }
 
 .image-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* 居中對齊標題 */
-    width: calc(33.33% - 80px); /* 每行三個圖片，減去間距 */
-    margin: 10px; /* 設置圖片的外邊距 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(33.33% - 80px);
+  margin: 10px;
 }
 
 .game-image {
-    width: 100%;
-    height: auto;
-    border: 2px solid #000;
-    border-radius: 40px;
-    cursor: pointer;
+  width: 100%;
+  height: auto;
+  border: 2px solid #000;
+  border-radius: 40px;
+  cursor: pointer;
 }
 
 .game-title {
-    margin-top: 10px;
-    font-size: 16px;
-    color: #333;
-    text-align: center; /* 確保標題居中對齊 */
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
 }
 
 .game-title.dark-mode {
-    color: white;
-}
-
-.content {
-    padding: 20px;
-    margin-top: 180px; /* 確保內容不會被固定的控制中心遮擋 */
-}
-
-table {
-    width: 80%;
-    border-collapse: collapse;
-    margin: 20px auto;
-    background-color: white;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-th, td {
-    padding: 20px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-}
-
-td a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-td a:hover {
-    text-decoration: underline;
-}
-
-.inputChoices {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.inputChoices input[type="checkbox"] {
-    margin-right: 10px;
-}
-
-.iconic-label {
-    font-size: 18px;
-    color: #333;
-}
-
-.inputChoices a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.inputChoices a:hover {
-    text-decoration: underline;
-}
-
-.messages {
-    margin-top: 10px;
-}
-
-.error {
-    margin-left: 20px;
-    color: red;
+  color: white;
 }

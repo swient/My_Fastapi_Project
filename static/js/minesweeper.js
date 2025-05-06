@@ -1,18 +1,18 @@
 const difficultyMap = {
-  easy:   { rows: 10, cols: 10, mines: 10 },
+  easy: { rows: 10, cols: 10, mines: 10 },
   medium: { rows: 10, cols: 20, mines: 25 },
-  hard:   { rows: 15, cols: 25, mines: 40 }
+  hard: { rows: 15, cols: 25, mines: 40 },
 };
 
-const boardElem = document.getElementById('board');
-const timerElem = document.getElementById('timer');
-const minesLeftElem = document.getElementById('mines-left');
-const resetButtonElem = document.getElementById('reset-button');
-const faceButtonElem = document.getElementById('face-button');
-const difficultyElem = document.getElementById('difficulty');
-const resultPageElem = document.getElementById('result-page');
-const resultMessageElem = document.getElementById('result-message');
-const resultButtonElem = document.getElementById('result-button');
+const boardElem = document.getElementById("board");
+const timerElem = document.getElementById("timer");
+const minesLeftElem = document.getElementById("mines-left");
+const resetButtonElem = document.getElementById("reset-button");
+const faceButtonElem = document.getElementById("face-button");
+const difficultyElem = document.getElementById("difficulty");
+const resultPageElem = document.getElementById("result-page");
+const resultMessageElem = document.getElementById("result-message");
+const resultButtonElem = document.getElementById("result-button");
 
 let board = [];
 let timer = 0;
@@ -22,49 +22,49 @@ let revealedCount = 0;
 let rows, cols, mines;
 let firstClick = false;
 let gameEnded = false;
-let currentDifficulty = 'easy';
+let currentDifficulty = "easy";
 
 function setupGame() {
   resetTimer();
   revealedCount = 0;
   firstClick = true;
   gameEnded = false;
-  faceButtonElem.textContent = '😀';
-  
+  faceButtonElem.textContent = "😀";
+
   ({ rows, cols, mines } = difficultyMap[currentDifficulty]);
   mineCount = mines;
   minesLeftElem.textContent = mineCount;
   // 隱藏結果頁面
-  resultPageElem.style.display = 'none';
+  resultPageElem.style.display = "none";
   createBoard();
 }
 
 function ensureFirstClickSafe(row, col) {
   while (board[row][col].mine) {
-      createBoard();
-      placeMines();
+    createBoard();
+    placeMines();
   }
 }
 
 function createBoard() {
   board = Array.from({ length: rows }, () => Array(cols).fill({}));
-  boardElem.innerHTML = '';
+  boardElem.innerHTML = "";
   boardElem.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
   boardElem.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
 
   for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
-      const cell = document.createElement('div');
-      cell.classList.add('cell');
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
       cell.dataset.row = i;
       cell.dataset.col = j;
 
-      cell.addEventListener('click', handleLeftClick);
-      cell.addEventListener('contextmenu', handleRightClick);
-      cell.addEventListener('mouseover', handleMouseOver);
-      cell.addEventListener('mouseout', handleMouseOut);
-      cell.addEventListener('mousedown', handleMouseDown);
-      cell.addEventListener('mouseup', handleMouseUp);
+      cell.addEventListener("click", handleLeftClick);
+      cell.addEventListener("contextmenu", handleRightClick);
+      cell.addEventListener("mouseover", handleMouseOver);
+      cell.addEventListener("mouseout", handleMouseOut);
+      cell.addEventListener("mousedown", handleMouseDown);
+      cell.addEventListener("mouseup", handleMouseUp);
 
       boardElem.appendChild(cell);
     }
@@ -100,6 +100,7 @@ function placeMines() {
 }
 
 function getNearbyMineCount(row, col) {
+  // prettier-ignore
   const directions = [
     [-1, -1], [-1, 0], [-1, 1],
     [0, -1],         [0, 1],
@@ -128,13 +129,12 @@ function resetTimer() {
   if (timerInterval) clearInterval(timerInterval);
   timerInterval = null;
   timer = 0;
-  timerElem.textContent = '0';
+  timerElem.textContent = "0";
 }
 
 function handleLeftClick(e) {
-  if (gameEnded) 
-      return; // 檢查遊戲是否結束
-  
+  if (gameEnded) return; // 檢查遊戲是否結束
+
   const cell = e.target;
   const row = parseInt(cell.dataset.row);
   const col = parseInt(cell.dataset.col);
@@ -157,9 +157,8 @@ function handleLeftClick(e) {
 }
 
 function handleRightClick(e) {
-  if (gameEnded) 
-      return; // 檢查遊戲是否結束
-  
+  if (gameEnded) return; // 檢查遊戲是否結束
+
   e.preventDefault();
   const cell = e.target;
   const row = parseInt(cell.dataset.row);
@@ -169,49 +168,47 @@ function handleRightClick(e) {
 
   if (board[row][col].flagged) {
     board[row][col].flagged = false;
-    cell.classList.remove('flagged');
-    cell.textContent = '';
+    cell.classList.remove("flagged");
+    cell.textContent = "";
     mineCount++;
   } else {
     board[row][col].flagged = true;
-    cell.classList.add('flagged');
-    cell.textContent = '🚩';
+    cell.classList.add("flagged");
+    cell.textContent = "🚩";
     mineCount--;
   }
 
   minesLeftElem.textContent = mineCount;
 
   // 在棋盤容器上添加事件監聽器，阻止右鍵選單彈出
-  boardElem.addEventListener('contextmenu', (e) => {
+  boardElem.addEventListener("contextmenu", (e) => {
     e.preventDefault();
   });
   // 在結果介面添加事件監聽器，阻止右鍵選單彈出
-  resultPageElem.addEventListener('contextmenu', (e) => {
+  resultPageElem.addEventListener("contextmenu", (e) => {
     e.preventDefault();
   });
 }
 
 function handleMouseOver(e) {
-  if (gameEnded) 
-      return; // 檢查遊戲是否結束
-  
+  if (gameEnded) return; // 檢查遊戲是否結束
+
   const cell = e.target;
   const row = parseInt(cell.dataset.row);
   const col = parseInt(cell.dataset.col);
 
-  if (!cell.classList.contains('revealed') && !board[row][col].flagged) {
-  cell.classList.add('hover');
+  if (!cell.classList.contains("revealed") && !board[row][col].flagged) {
+    cell.classList.add("hover");
   }
 }
 
 function handleMouseOut(e) {
   const cell = e.target;
-  cell.classList.remove('hover');
+  cell.classList.remove("hover");
 }
 
 function handleMouseDown(e) {
-  if (gameEnded) 
-      return; // 檢查遊戲是否結束
+  if (gameEnded) return; // 檢查遊戲是否結束
   if (e.buttons === 3) {
     const cell = e.target;
     const row = parseInt(cell.dataset.row);
@@ -224,12 +221,12 @@ function handleMouseDown(e) {
       let hitMine = false;
       neighbors.forEach(({ row, col, flagged }) => {
         if (!flagged) {
-            if (board[row][col].mine) {
-              hitMine = true;
-            } else {
-              revealCell(row, col);
-              checkWin();
-            }
+          if (board[row][col].mine) {
+            hitMine = true;
+          } else {
+            revealCell(row, col);
+            checkWin();
+          }
         }
       });
 
@@ -239,9 +236,9 @@ function handleMouseDown(e) {
       }
     } else {
       neighbors.forEach(({ row, col, revealed, flagged }) => {
-        if (!revealed && ! flagged) {
+        if (!revealed && !flagged) {
           const neighborCell = boardElem.children[row * cols + col];
-          neighborCell.classList.add('hover');
+          neighborCell.classList.add("hover");
         }
       });
     }
@@ -249,8 +246,8 @@ function handleMouseDown(e) {
 }
 
 function handleMouseUp() {
-  const cells = boardElem.querySelectorAll('.cell');
-  cells.forEach((cell) => cell.classList.remove('hover'));
+  const cells = boardElem.querySelectorAll(".cell");
+  cells.forEach((cell) => cell.classList.remove("hover"));
 }
 
 function revealCell(row, col) {
@@ -260,11 +257,12 @@ function revealCell(row, col) {
   cell.revealed = true;
   revealedCount++;
   const cellElement = boardElem.children[row * cols + col];
-  cellElement.classList.add('revealed');
+  cellElement.classList.add("revealed");
 
   if (cell.nearby) {
     cellElement.textContent = cell.nearby;
   } else {
+    // prettier-ignore
     const directions = [
       [-1, -1], [-1, 0], [-1, 1],
       [0, -1],         [0, 1],
@@ -279,6 +277,7 @@ function revealCell(row, col) {
 }
 
 function getNeighbors(row, col) {
+  // prettier-ignore
   const directions = [
     [-1, -1], [-1, 0], [-1, 1],
     [0, -1],         [0, 1],
@@ -295,8 +294,8 @@ function revealAllMines() {
     for (let j = 0; j < cols; j++) {
       if (board[i][j].mine) {
         const cellElement = boardElem.children[i * cols + j];
-        cellElement.classList.add('revealed');
-        cellElement.textContent = '💣';
+        cellElement.classList.add("revealed");
+        cellElement.textContent = "💣";
       }
     }
   }
@@ -310,25 +309,25 @@ function checkWin() {
 
 function showResult(win) {
   stopTimer();
-  faceButtonElem.textContent = win ? '😎' : '😭';
+  faceButtonElem.textContent = win ? "😎" : "😭";
   if (win) {
-      resultMessageElem.textContent = '恭喜，你勝利了！';
-      resultMessageElem.style.color = '#4CAF50';
-      resultButtonElem.style.backgroundColor = '#4CAF50'; // 綠色
+    resultMessageElem.textContent = "恭喜，你勝利了！";
+    resultMessageElem.style.color = "#4CAF50";
+    resultButtonElem.style.backgroundColor = "#4CAF50"; // 綠色
   } else {
-      resultMessageElem.textContent = '很遺憾，你失敗了！';
-      resultMessageElem.style.color = '#f44336';
-      resultButtonElem.style.backgroundColor = '#f44336'; // 紅色
+    resultMessageElem.textContent = "很遺憾，你失敗了！";
+    resultMessageElem.style.color = "#f44336";
+    resultButtonElem.style.backgroundColor = "#f44336"; // 紅色
   }
-  resultPageElem.style.display = 'flex';
+  resultPageElem.style.display = "flex";
   gameEnded = true;
 }
 
 window.onload = () => {
-  resetButtonElem.addEventListener('click', setupGame);
-  faceButtonElem.addEventListener('click', setupGame);
-  resultButtonElem.addEventListener('click', setupGame);
-  difficultyElem.addEventListener('change', (e) => {
+  resetButtonElem.addEventListener("click", setupGame);
+  faceButtonElem.addEventListener("click", setupGame);
+  resultButtonElem.addEventListener("click", setupGame);
+  difficultyElem.addEventListener("change", (e) => {
     currentDifficulty = e.target.value;
     setupGame();
   });

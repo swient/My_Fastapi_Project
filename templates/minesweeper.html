@@ -1,68 +1,68 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>踩地雷</title>
-    <link rel="stylesheet" href="/static/css/control-bar.css">
-    <link rel="stylesheet" href="/static/css/minesweeper.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/static/css/control-bar.css" />
+    <link rel="stylesheet" href="/static/css/minesweeper.css" />
+  </head>
+  <body>
     <div class="control-bar">
-        <button onclick="location.href='/'">首頁</button>
-        <div class="user-profile" onclick="toggleProfilePopup()">
-            <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
-        </div>
+      <button onclick="location.href='/'">首頁</button>
+      <div class="user-profile" onclick="toggleProfilePopup()">
+        <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar" />
+      </div>
     </div>
     <div id="profile-popup" class="profile-popup">
-        <div class="profile-header" onclick="toggleProfilePopup()">
-            <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
-            <span>{{ username }}</span>
-        </div>
-        {% if not username %}
-            <button onclick="window.location.href='/register'">註冊</button>
-            <button onclick="window.location.href='/login'">登入</button>
-        {% else %}
-            <button onclick="window.location.href='/setting'">帳號設置</button>
-            <button onclick="window.location.href='/logout'">退出登入</button>
-        {% endif %}
+      <div class="profile-header" onclick="toggleProfilePopup()">
+        <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar" />
+        <span>{{ username }}</span>
+      </div>
+      {% if not username %}
+      <button onclick="window.location.href='/register'">註冊</button>
+      <button onclick="window.location.href='/login'">登入</button>
+      {% else %}
+      <button onclick="window.location.href='/setting'">帳號設置</button>
+      <button onclick="window.location.href='/logout'">退出登入</button>
+      {% endif %}
     </div>
     <div class="game-container">
-        <div class="top-bar">
-            <div class="difficulty">
-                <label for="difficulty">難度：</label>
-                <select id="difficulty">
-                <option value="easy">簡單 (10x10)</option>
-                <option value="medium">中等 (10x20)</option>
-                <option value="hard">困難 (15x25)</option>
-                </select>
-            </div>
-            <button id="reset-button">重新開始</button>
+      <div class="top-bar">
+        <div class="difficulty">
+          <label for="difficulty">難度：</label>
+          <select id="difficulty">
+            <option value="easy">簡單 (10x10)</option>
+            <option value="medium">中等 (10x20)</option>
+            <option value="hard">困難 (15x25)</option>
+          </select>
         </div>
-        <div class="status-bar">
-            <div class="timer">時間：<span id="timer">0</span> 秒</div>
-            <div class="mines-left">剩餘地雷：<span id="mines-left">0</span></div>
-        </div>
-        <div>
-            <button id="face-button" class="face"></button>
-        </div>
-        <div id="board" class="board"></div>
+        <button id="reset-button">重新開始</button>
+      </div>
+      <div class="status-bar">
+        <div class="timer">時間：<span id="timer">0</span> 秒</div>
+        <div class="mines-left">剩餘地雷：<span id="mines-left">0</span></div>
+      </div>
+      <div>
+        <button id="face-button" class="face"></button>
+      </div>
+      <div id="board" class="board"></div>
     </div>
-    <div id="result-page" class="result-page" style="display: none;">
-        <h1 id="result-message"></h1>
-        <button id="result-button">重新開始</button>
+    <div id="result-page" class="result-page" style="display: none">
+      <h1 id="result-message"></h1>
+      <button id="result-button">重新開始</button>
     </div>
     <script>
-        function toggleProfilePopup() {
-            var popup = document.getElementById("profile-popup");
-            if (popup.style.display === "none" || popup.style.display === "") {
-                popup.style.display = "block";
-            } else {
-                popup.style.display = "none";
-            }
+      function toggleProfilePopup() {
+        var popup = document.getElementById("profile-popup");
+        if (popup.style.display === "none" || popup.style.display === "") {
+          popup.style.display = "block";
+        } else {
+          popup.style.display = "none";
         }
+      }
     </script>
     <script src="/static/js/minesweeper.js"></script>
     <script src="/static/js/dark-mode.js"></script>
-</body>
+  </body>
 </html>

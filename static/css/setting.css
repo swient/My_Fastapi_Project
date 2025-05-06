@@ -1,206 +1,209 @@
 body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    background-color: #f3f3f3;
-    zoom: 90%;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #f3f3f3;
+  zoom: 90%;
 }
 
 body.dark-mode {
-    background-color: #333; 
+  background-color: #333;
 }
 
 .settings-container {
-    display: flex;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    margin-top: 180px;
+  display: flex;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin-top: 180px;
 }
 
-/* Menu Styles */
 .menu-container {
-    width: 250px;
-    border-right: 1px solid #ddd;
-    padding-right: 20px; /* Add padding to the right */
+  width: 250px;
+  border-right: 1px solid #ddd;
+  padding-right: 20px;
 }
 
 .menu-item {
-    padding: 15px 20px;
-    cursor: pointer;
-    border-bottom: 1px solid #ddd;
-    color: #333;
-    border-radius: 8px; /* Rounded corners */
-    font-size: 18px; /* Smaller font size */
+  padding: 15px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+  color: #333;
+  border-radius: 8px;
+  font-size: 18px;
 }
 
 .menu-item.active {
-    background-color: #007bff;
-    color: #fff;
+  background-color: #007bff;
+  color: #fff;
 }
 
-/* Content Styles */
 .content-container {
-    flex: 1;
-    padding: 20px;
-    font-size: 14px; /* Smaller font size */
+  flex: 1;
+  padding: 20px;
+  font-size: 14px;
 }
 
 .settings-section {
-    display: none;
+  display: none;
 }
 
 .settings-section.active {
-    display: block;
+  display: block;
 }
 
 .settings-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 15px;
-    font-size: 16px; /* Smaller font size */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  font-size: 16px;
 }
 
 .settings-label {
-    flex: 1;
-    font-weight: bold;
-    color: #333;
+  flex: 1;
+  font-weight: bold;
+  color: #333;
 }
 
 .toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
 }
 
 .toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 20px;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
 }
 
 .slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
 }
 
 input:checked + .slider {
-    background-color: #007bff;
+  background-color: #007bff;
 }
 
 input:checked + .slider:before {
-    transform: translateX(20px);
+  transform: translateX(20px);
 }
 
-select, input[type="text"], input[type="email"], input[type="password"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px; /* Smaller font size */
+select,
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .profile-item {
-    margin-bottom: 15px;
-    font-size: 16px; /* Smaller font size */
+  margin-bottom: 15px;
+  font-size: 16px;
 }
 
 .profile-label {
-    display: block;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .username-span {
-    margin-left: 10px;
-    font-size: 30px; /* 設置字體大小為18像素 */
-    color: #555; /* 設置字體顏色為深灰色 */
+  margin-left: 10px;
+  font-size: 30px;
+  color: #555;
 }
 
 .avatar-upload {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 80px;
-    height: 80px;
-    border: 2px dashed #ddd;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: border-color 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border: 2px dashed #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: border-color 0.3s;
 }
 
 .avatar-upload:hover {
-    border-color: #007bff;
+  border-color: #007bff;
 }
 
 .avatar-upload img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%; /* 確保圖片保持圓形 */
-    margin-top: 5px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-top: 5px;
 }
 
 .avatar-upload input[type="file"] {
-    display: none;
+  display: none;
 }
 
 .container {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .save-button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    font-size: 16px; /* Smaller font size */
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 16px;
 }
 
 .save-button:hover {
-    background-color: #0056b3;
+  background-color: #0056b3;
 }
 
-.profile-success, .password-success {
-    font-size: 18px;
-    margin-left: 20px;
-    color: green;
+.profile-success,
+.password-success {
+  font-size: 18px;
+  margin-left: 20px;
+  color: green;
 }
 
-.profile-error, .password-error {
-    font-size: 18px;
-    margin-left: 20px;
-    color: red;
+.profile-error,
+.password-error {
+  font-size: 18px;
+  margin-left: 20px;
+  color: red;
 }

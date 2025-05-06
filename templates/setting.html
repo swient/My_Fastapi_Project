@@ -1,142 +1,183 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>設定頁面</title>
-    <link rel="stylesheet" href="static/css/setting.css">
-    <link rel="stylesheet" href="/static/css/control-bar.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/static/css/control-bar.css" />
+    <link rel="stylesheet" href="static/css/setting.css" />
+  </head>
+  <body>
     <div class="control-bar">
-        <button onclick="location.href='/'">首頁</button>
-        <div class="user-profile" onclick="toggleProfilePopup()">
-            <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
-        </div>
+      <button onclick="location.href='/'">首頁</button>
+      <div class="user-profile" onclick="toggleProfilePopup()">
+        <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar" />
+      </div>
     </div>
     <div id="profile-popup" class="profile-popup">
-        <div class="profile-header" onclick="toggleProfilePopup()">
-            <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
-            <span>{{ username }}</span>
-        </div>
-        {% if not username %}
-            <button onclick="window.location.href='/register'">註冊</button>
-            <button onclick="window.location.href='/login'">登入</button>
-        {% else %}
-            <button onclick="window.location.href='/setting'">帳號設置</button>
-            <button onclick="window.location.href='/logout'">退出登入</button>
-        {% endif %}
+      <div class="profile-header" onclick="toggleProfilePopup()">
+        <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar" />
+        <span>{{ username }}</span>
+      </div>
+      {% if not username %}
+      <button onclick="window.location.href='/register'">註冊</button>
+      <button onclick="window.location.href='/login'">登入</button>
+      {% else %}
+      <button onclick="window.location.href='/setting'">帳號設置</button>
+      <button onclick="window.location.href='/logout'">退出登入</button>
+      {% endif %}
     </div>
     <div class="settings-container">
-        <div class="menu-container">
-            <div class="menu-item active" data-section="system">系統設定</div>
-            <div class="menu-item" data-section="profile">個人資料</div>
-            <div class="menu-item" data-section="password">更改密碼</div>
+      <div class="menu-container">
+        <div class="menu-item active" data-section="system">系統設定</div>
+        <div class="menu-item" data-section="profile">個人資料</div>
+        <div class="menu-item" data-section="password">更改密碼</div>
+      </div>
+      <div class="content-container">
+        <div id="systemSection" class="settings-section active">
+          <h2>系統設定</h2>
+          <div class="settings-item">
+            <span class="settings-label">通知</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notifications" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">深色模式</span>
+            <label class="toggle-switch">
+              <input
+                type="checkbox"
+                id="darkMode"
+                onchange="toggleDarkMode()"
+              />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">自動更新</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="autoUpdate" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">語言</span>
+            <select id="language">
+              <option value="zh-TW">繁體中文</option>
+              <option value="en">English</option>
+              <option value="ja">日本語</option>
+            </select>
+          </div>
+          <div class="settings-item">
+            <span class="settings-label">字體大小</span>
+            <select id="fontSize">
+              <option value="small">小</option>
+              <option value="medium" selected>中</option>
+              <option value="large">大</option>
+            </select>
+          </div>
+          <button class="save-button" onclick="saveSettings()">儲存設定</button>
         </div>
-        <div class="content-container">
-            <div id="systemSection" class="settings-section active">
-                <h2>系統設定</h2>
-                <div class="settings-item">
-                    <span class="settings-label">通知</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="notifications" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="settings-item">
-                    <span class="settings-label">深色模式</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="darkMode" onchange="toggleDarkMode()">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="settings-item">
-                    <span class="settings-label">自動更新</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="autoUpdate" checked>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div class="settings-item">
-                    <span class="settings-label">語言</span>
-                    <select id="language">
-                        <option value="zh-TW">繁體中文</option>
-                        <option value="en">English</option>
-                        <option value="ja">日本語</option>
-                    </select>
-                </div>
-                <div class="settings-item">
-                    <span class="settings-label">字體大小</span>
-                    <select id="fontSize">
-                        <option value="small">小</option>
-                        <option value="medium" selected>中</option>
-                        <option value="large">大</option>
-                    </select>
-                </div>
-                <button class="save-button" onclick="saveSettings()">儲存設定</button>
+        <div id="profileSection" class="settings-section">
+          <h2>個人資料</h2>
+          <form
+            method="POST"
+            action="/change_profile"
+            enctype="multipart/form-data"
+          >
+            <div class="profile-item">
+              <label class="profile-label">頭像</label>
+              <div class="avatar-upload">
+                <label for="avatarInput">
+                  <img
+                    src="/static/images/avatar/{{ user_avatar }}"
+                    alt="User Avatar"
+                  />
+                </label>
+                <input
+                  type="file"
+                  id="avatarInput"
+                  name="profile_image"
+                  style="display: none"
+                  accept="image/*"
+                />
+              </div>
             </div>
-            <div id="profileSection" class="settings-section">
-                <h2>個人資料</h2>
-                <form method="POST" action="/change_profile" enctype="multipart/form-data">
-                    <div class="profile-item">
-                        <label class="profile-label">頭像</label>
-                        <div class="avatar-upload">
-                            <label for="avatarInput">
-                                <img src="/static/images/avatar/{{ user_avatar }}" alt="User Avatar">
-                            </label>
-                            <input type="file" id="avatarInput" name="profile_image" style="display: none" accept="image/*">
-                        </div>
-                    </div>
-                    <div class="profile-item">
-                        <label class="profile-label">用戶名</label>
-                        <span class="username-span">{{ username }}</span>
-                    </div>
-                    <div class="profile-item">
-                        <label class="profile-label">電子郵件</label>
-                        <input type="email" class="profile-input" id="email" placeholder="請輸入電子郵件">
-                    </div>
-                    <div class="container">
-                        <button type="submit" class="save-button">更新資料</button>
-                        <a class="profile-error">{{ error }}</a>
-                        <a class="profile-success">{{ success }}</a>
-                    </div>                    
-                </form>
+            <div class="profile-item">
+              <label class="profile-label">用戶名</label>
+              <span class="username-span">{{ username }}</span>
             </div>
-            <div id="passwordSection" class="settings-section">
-                <h2>更改密碼</h2>
-                <form method="POST" action="/change_password" enctype="multipart/form-data">
-                    <div class="profile-item">
-                        <label class="profile-label">目前密碼</label>
-                        <input type="password" class="profile-input" name="current_password" placeholder="請輸入目前密碼">
-                    </div>
-                    <div class="profile-item">
-                        <label class="profile-label">新密碼</label>
-                        <input type="password" class="profile-input" name="new_password" placeholder="請輸入新密碼">
-                    </div>
-                    <div class="profile-item">
-                        <label class="profile-label">確認新密碼</label>
-                        <input type="password" class="profile-input" name="confirm_password" placeholder="請再次輸入新密碼">
-                    </div>
-                    <div class="container">
-                        <button type="submit" class="save-button">更改密碼</button>
-                        <a class="password-error">{{ error }}</a>
-                        <a class="password-success">{{ success }}</a>
-                    </div>
-                </form>
+            <div class="profile-item">
+              <label class="profile-label">電子郵件</label>
+              <input
+                type="email"
+                class="profile-input"
+                id="email"
+                placeholder="請輸入電子郵件"
+              />
             </div>
+            <div class="container">
+              <button type="submit" class="save-button">更新資料</button>
+              <a class="profile-error">{{ error }}</a>
+              <a class="profile-success">{{ success }}</a>
+            </div>
+          </form>
         </div>
+        <div id="passwordSection" class="settings-section">
+          <h2>更改密碼</h2>
+          <form
+            method="POST"
+            action="/change_password"
+            enctype="multipart/form-data"
+          >
+            <div class="profile-item">
+              <label class="profile-label">目前密碼</label>
+              <input
+                type="password"
+                class="profile-input"
+                name="current_password"
+                placeholder="請輸入目前密碼"
+              />
+            </div>
+            <div class="profile-item">
+              <label class="profile-label">新密碼</label>
+              <input
+                type="password"
+                class="profile-input"
+                name="new_password"
+                placeholder="請輸入新密碼"
+              />
+            </div>
+            <div class="profile-item">
+              <label class="profile-label">確認新密碼</label>
+              <input
+                type="password"
+                class="profile-input"
+                name="confirm_password"
+                placeholder="請再次輸入新密碼"
+              />
+            </div>
+            <div class="container">
+              <button type="submit" class="save-button">更改密碼</button>
+              <a class="password-error">{{ error }}</a>
+              <a class="password-success">{{ success }}</a>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
     <script>
-        function toggleProfilePopup() {
-            var popup = document.getElementById("profile-popup");
-            if (popup.style.display === "none" || popup.style.display === "") {
-                popup.style.display = "block";
-            } else {
-                popup.style.display = "none";
-            }
+      function toggleProfilePopup() {
+        var popup = document.getElementById("profile-popup");
+        if (popup.style.display === "none" || popup.style.display === "") {
+          popup.style.display = "block";
+        } else {
+          popup.style.display = "none";
         }
+      }
     </script>
     <script src="/static/js/setting.js"></script>
     <script src="/static/js/dark-mode.js"></script>
-</body>
+  </body>
 </html>
