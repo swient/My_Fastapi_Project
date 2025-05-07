@@ -10,10 +10,6 @@
   z-index: 1000;
 }
 
-.control-bar.dark-mode {
-  background-color: #f3f3f3;
-}
-
 .control-bar button {
   background-color: #444;
   color: white;

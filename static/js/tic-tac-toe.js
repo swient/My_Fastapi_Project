@@ -9,8 +9,8 @@ let currentPlayer = null; // 輪到誰
 // UI 元素快取
 const boardElem = document.getElementById("tic-tac-toe-board");
 const turnElem = document.getElementById("turn");
-const scoreXElem = document.getElementById("player-score");
-const scoreOElem = document.getElementById("computer-score");
+const playerScoreElem = document.getElementById("player-score");
+const computerScoreElem = document.getElementById("computer-score");
 const resetButtonElem = document.getElementById("reset-button");
 const resultButtonElem = document.getElementById("result-button");
 const resultMessageElem = document.getElementById("result-message");
@@ -183,8 +183,8 @@ function checkWin(player) {
 }
 
 function updateScore() {
-  scoreXElem.innerText = `玩家勝場：${playerWin}`;
-  scoreOElem.innerText = `電腦勝場：${computerWin}`;
+  playerScoreElem.innerText = `玩家勝場：${playerWin}`;
+  computerScoreElem.innerText = `電腦勝場：${computerWin}`;
 }
 
 function showResult(msg) {

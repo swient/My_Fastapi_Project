@@ -8,10 +8,6 @@ body {
   zoom: 90%;
 }
 
-body.dark-mode {
-  background-color: #333;
-}
-
 .game-section {
   display: flex;
   flex-wrap: wrap;

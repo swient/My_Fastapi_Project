@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="/static/css/auth.css" />
   </head>
   <body>
+    <div class="auth-popup">
+      <span class="auth-popup-icon"></span>
+      <span class="auth-popup-message"></span>
+    </div>
     <div class="control-bar">
       <button onclick="location.href='/'">首頁</button>
       <div class="user-profile" onclick="toggleProfilePopup()">
@@ -28,7 +32,7 @@
       {% endif %}
     </div>
     <div class="content">
-      <form method="POST" class="register-form">
+      <form method="POST" action="/login" class="login-form">
         <div class="form-top">
           <h2>登入</h2>
           <div class="form-links">
@@ -58,12 +62,7 @@
               required
             />
           </div>
-          <div class="form-group submit-container">
-            <input type="submit" value="Login" />
-            {% if error %}
-            <a class="error">{{ error }}</a>
-            {% endif %}
-          </div>
+          <input type="submit" value="Login" />
         </div>
       </form>
     </div>
@@ -78,5 +77,6 @@
       }
     </script>
     <script src="/static/js/dark-mode.js"></script>
+    <script src="/static/js/auth.js"></script>
   </body>
 </html>

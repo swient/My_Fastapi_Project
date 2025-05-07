@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="/static/css/auth.css" />
   </head>
   <body>
+    <div class="auth-popup">
+      <span class="auth-popup-icon"></span>
+      <span class="auth-popup-message"></span>
+    </div>
     <div class="control-bar">
       <button onclick="location.href='/'">首頁</button>
       <div class="user-profile" onclick="toggleProfilePopup()">
@@ -28,7 +32,12 @@
       {% endif %}
     </div>
     <div class="content">
-      <form method="POST" enctype="multipart/form-data" class="register-form">
+      <form
+        method="POST"
+        action="/register"
+        enctype="multipart/form-data"
+        class="register-form"
+      >
         <div class="form-top">
           <h2>註冊</h2>
           <div class="form-links">
@@ -67,12 +76,7 @@
               accept=".jpg, .jpeg, .png"
             />
           </div>
-          <div class="form-group submit-container">
-            <input type="submit" value="Register" />
-            {% if error %}
-            <a class="error">{{ error }}</a>
-            {% endif %}
-          </div>
+          <input type="submit" value="Register" />
           <div class="form-group">
             <label class="inputChoices">
               <input type="checkbox" name="accept" value="1" required />
@@ -101,5 +105,6 @@
       }
     </script>
     <script src="/static/js/dark-mode.js"></script>
+    <script src="/static/js/auth.js"></script>
   </body>
 </html>

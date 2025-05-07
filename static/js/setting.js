@@ -1,32 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
   // UI 元素快取
-  const menuItems = document.querySelectorAll(".menu-item");
-  const sections = document.querySelectorAll(".settings-section");
-  const profileForm = document.querySelector("#profileSection form");
-  const passwordForm = document.querySelector("#passwordSection form");
-  const profileErrorElement = document.querySelector(".profile-error");
-  const profileSuccessElement = document.querySelector(".profile-success");
-  const passwordErrorElement = document.querySelector(".password-error");
-  const passwordSuccessElement = document.querySelector(".password-success");
+  const menuItemElemList = document.querySelectorAll(".menu-item");
+  const sectionElemList = document.querySelectorAll(".settings-section");
+  const profileFormElem = document.querySelector("#profileSection form");
+  const passwordFormElem = document.querySelector("#passwordSection form");
 
-  menuItems.forEach((item) => {
-    item.addEventListener("click", function () {
+  menuItemElemList.forEach((menuItemElem) => {
+    menuItemElem.addEventListener("click", function () {
       // Remove active class from all menu items
-      menuItems.forEach((i) => i.classList.remove("active"));
+      menuItemElemList.forEach((elem) => elem.classList.remove("active"));
       // Add active class to the clicked menu item
       this.classList.add("active");
 
       // Hide all sections
-      sections.forEach((section) => section.classList.remove("active"));
+      sectionElemList.forEach((sectionElem) =>
+        sectionElem.classList.remove("active")
+      );
       // Show the corresponding section
       const sectionId = this.getAttribute("data-section");
       document.getElementById(sectionId + "Section").classList.add("active");
     });
   });
 
-  profileForm.addEventListener("submit", function (event) {
+  profileFormElem.addEventListener("submit", function (event) {
     event.preventDefault();
-    const formData = new FormData(profileForm);
+    const formData = new FormData(profileFormElem);
     fetch("/change_profile", {
       method: "POST",
       body: formData,
@@ -34,26 +32,16 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
-          showMessage(
-            "error",
-            data.error,
-            profileErrorElement,
-            profileSuccessElement
-          );
+          showPopup(data.error, "error");
         } else if (data.success) {
-          showMessage(
-            "success",
-            data.success,
-            profileErrorElement,
-            profileSuccessElement
-          );
+          showPopup(data.success, "success");
         }
       });
   });
 
-  passwordForm.addEventListener("submit", function (event) {
+  passwordFormElem.addEventListener("submit", function (event) {
     event.preventDefault();
-    const formData = new FormData(passwordForm);
+    const formData = new FormData(passwordFormElem);
     fetch("/change_password", {
       method: "POST",
       body: formData,
@@ -61,36 +49,41 @@ document.addEventListener("DOMContentLoaded", function () {
       .then((response) => response.json())
       .then((data) => {
         if (data.error) {
-          showMessage(
-            "error",
-            data.error,
-            passwordErrorElement,
-            passwordSuccessElement
-          );
+          showPopup(data.error, "error");
         } else if (data.success) {
-          showMessage(
-            "success",
-            data.success,
-            passwordErrorElement,
-            passwordSuccessElement
-          );
+          showPopup(data.success, "success");
         }
       });
   });
 
-  function showMessage(type, message, errorElement, successElement) {
-    if (type === "error") {
-      errorElement.textContent = message;
-      errorElement.style.display = "block";
-      successElement.style.display = "none";
-    } else if (type === "success") {
-      successElement.textContent = message;
-      successElement.style.display = "block";
-      errorElement.style.display = "none";
+  function showPopup(message, type) {
+    const popupElem = document.querySelector(".auth-popup");
+    const iconElem = popupElem.querySelector(".auth-popup-icon");
+    const messageElem = popupElem.querySelector(".auth-popup-message");
+
+    // 設定訊息
+    messageElem.textContent = message;
+
+    // 設定圖示和樣式
+    if (type === "success") {
+      iconElem.textContent = "✅";
+      popupElem.classList.remove("error");
+      popupElem.classList.add("success");
+    } else if (type === "error") {
+      iconElem.textContent = "⛔";
+      popupElem.classList.remove("success");
+      popupElem.classList.add("error");
+    } else {
+      iconElem.textContent = "";
+      popupElem.classList.remove("success", "error");
     }
+
+    // 顯示 popup
+    popupElem.style.display = "block";
+
+    // 自動隱藏
     setTimeout(() => {
-      errorElement.style.display = "none";
-      successElement.style.display = "none";
-    }, 3000);
+      popupElem.style.display = "none";
+    }, 2000);
   }
 });

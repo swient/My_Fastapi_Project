@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="static/css/setting.css" />
   </head>
   <body>
+    <div class="auth-popup">
+      <span class="auth-popup-icon"></span>
+      <span class="auth-popup-message"></span>
+    </div>
     <div class="control-bar">
       <button onclick="location.href='/'">首頁</button>
       <div class="user-profile" onclick="toggleProfilePopup()">
@@ -119,8 +123,6 @@
             </div>
             <div class="container">
               <button type="submit" class="save-button">更新資料</button>
-              <a class="profile-error">{{ error }}</a>
-              <a class="profile-success">{{ success }}</a>
             </div>
           </form>
         </div>
@@ -160,8 +162,6 @@
             </div>
             <div class="container">
               <button type="submit" class="save-button">更改密碼</button>
-              <a class="password-error">{{ error }}</a>
-              <a class="password-success">{{ success }}</a>
             </div>
           </form>
         </div>

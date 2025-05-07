@@ -1,3 +1,30 @@
+.auth-popup {
+  position: fixed;
+  display: none;
+  text-align: center;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 180px;
+  max-width: 90vw;
+  padding: 16px 20px;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  z-index: 9999;
+  transition: background 0.2s;
+}
+
+.auth-popup.success {
+  background: #e6fbe6;
+  color: #217a21;
+}
+
+.auth-popup.error {
+  background: #ffeaea;
+  color: #b71c1c;
+}
+
 body {
   font-family: Arial, sans-serif;
   display: flex;
@@ -6,10 +33,6 @@ body {
   justify-content: flex-start;
   background-color: #f3f3f3;
   zoom: 90%;
-}
-
-body.dark-mode {
-  background-color: #333;
 }
 
 .settings-container {
@@ -192,18 +215,4 @@ input[type="password"] {
 
 .save-button:hover {
   background-color: #0056b3;
-}
-
-.profile-success,
-.password-success {
-  font-size: 18px;
-  margin-left: 20px;
-  color: green;
-}
-
-.profile-error,
-.password-error {
-  font-size: 18px;
-  margin-left: 20px;
-  color: red;
 }
