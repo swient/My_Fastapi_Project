@@ -122,8 +122,9 @@ body {
 
 .result-page h1 {
   margin-bottom: 20px;
-  font-size: 36px; /* 放大文字 */
-  font-weight: bold; /* 加粗文字 */
+  font-size: 36px;
+  font-weight: bold;
+  user-select: none;
 }
 
 .result-page button {
@@ -133,6 +134,7 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  user-select: none;
 }
 
 .result-page button:hover {

@@ -108,6 +108,7 @@ body {
   font-size: 36px;
   font-weight: bold;
   color: #4caf50;
+  user-select: none;
 }
 
 .result-page button {
@@ -118,6 +119,7 @@ body {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  user-select: none;
 }
 
 .result-page button:hover {
