@@ -43,18 +43,49 @@ body {
 }
 
 #snake-board {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: grid;
+  border: 2px solid #1976d2;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px #bbb;
+  background: #e3f2fd;
 }
 
-#snake-game {
-  background: none;
-  border: 3px solid #1976d2;
-  border-radius: 18px;
-  box-shadow: 0 4px 24px #bbb;
-  margin: 0 auto;
-  display: block;
+.cell[data-row="0"][data-col="0"] {
+  border-top-left-radius: 18px;
+}
+
+.cell[data-row="0"][data-col="24"] {
+  border-top-right-radius: 18px;
+}
+
+.cell[data-row="24"][data-col="0"] {
+  border-bottom-left-radius: 18px;
+}
+
+.cell[data-row="24"][data-col="24"] {
+  border-bottom-right-radius: 18px;
+}
+
+.cell {
+  width: 25px;
+  height: 25px;
+  font-size: 20px;
+  background: #bbdefb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.even-cell {
+  background: #e3f2fd !important;
+}
+
+.snake-head {
+  background: #2e7d32 !important;
+}
+
+.snake-body {
+  background: #43a047 !important;
 }
 
 .result-page {

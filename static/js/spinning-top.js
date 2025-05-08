@@ -1,4 +1,4 @@
-// 陀螺遊戲主程式
+// 旋轉陀螺主程式
 const difficultyWidthMap = {
   easy: 40,
   medium: 35,
@@ -33,42 +33,6 @@ const resultMessageElem = document.getElementById("result-message");
 const resultPageElem = document.getElementById("result-page");
 const bestScoreElem = document.getElementById("best-score");
 const difficultyElem = document.getElementById("difficulty");
-
-// UI初始化
-function initUI() {
-  const barWrap = document.createElement("div");
-  barWrap.style.width = "400px";
-  barWrap.style.height = "22px";
-  barWrap.style.background = "#eee";
-  barWrap.style.borderRadius = "12px";
-  barWrap.style.margin = "0 auto 18px auto";
-  barWrap.style.overflow = "hidden";
-  barWrap.style.position = "relative";
-  barWrap.style.boxShadow = "0 2px 8px rgba(0,0,0,0.10)";
-
-  const targetBoxElem = document.createElement("div");
-  targetBoxElem.id = "target-box";
-  targetBoxElem.style.position = "absolute";
-  targetBoxElem.style.top = "50%";
-  targetBoxElem.style.transform = "translateY(-50%)";
-  targetBoxElem.style.height = "calc(100% - 4px)";
-  targetBoxElem.style.background = "rgba(0,123,255,0.25)";
-  targetBoxElem.style.border = "2px solid #007bff";
-  targetBoxElem.style.borderRadius = "10px";
-  targetBoxElem.style.pointerEvents = "none";
-  barWrap.appendChild(targetBoxElem);
-
-  const energyBarElem = document.createElement("div");
-  energyBarElem.id = "energy-bar";
-  energyBarElem.style.height = "100%";
-  energyBarElem.style.width = "50%";
-  energyBarElem.style.background = "#ffc107";
-  energyBarElem.style.transition = "width 0.2s";
-  barWrap.appendChild(energyBarElem);
-
-  const area = document.querySelector(".spinning-top-area");
-  area.insertBefore(barWrap, area.firstChild);
-}
 
 // 能量條更新
 function updateEnergyBar() {
@@ -244,6 +208,5 @@ window.onload = () => {
     currentDifficulty = e.target.value;
     setupGame();
   });
-  initUI();
   setupGame();
 };

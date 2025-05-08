@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>陀螺遊戲</title>
+    <title>旋轉陀螺 Spinning Top</title>
     <link rel="stylesheet" href="/static/css/control-bar.css" />
     <link rel="stylesheet" href="/static/css/spinning-top.css" />
   </head>
@@ -29,7 +29,7 @@
     </div>
     <div class="game-container">
       <div class="top-bar">
-        <span>轉陀螺 spinning-top</span>
+        <span>旋轉陀螺 spinning-top</span>
         <div class="difficulty">
           <label for="difficulty">難度：</label>
           <select id="difficulty">
@@ -44,6 +44,10 @@
         <div class="score">分數：<span id="score">0</span></div>
       </div>
       <div class="spinning-top-area">
+        <div class="energy-bar-wrap">
+          <div id="energy-bar"></div>
+          <div id="target-box"></div>
+        </div>
         <img
           id="spinning-top-img"
           src="/static/images/game/Spinning-top.png"
@@ -52,7 +56,7 @@
         <button id="spin-button">旋轉！</button>
       </div>
     </div>
-    <div id="result-page" class="result-page" style="display: none">
+    <div id="result-page" class="result-page">
       <h1 id="result-message"></h1>
       <div id="best-score"></div>
       <button id="result-button">再玩一次</button>

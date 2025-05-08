@@ -1,6 +1,6 @@
 // 貪吃蛇遊戲主程式
-const box = 24;
-const canvasSize = 600;
+const ROWS = 25;
+const COLS = 25;
 let snake = [];
 let direction = null;
 let nextDirection = null;
@@ -13,8 +13,7 @@ let isGameOver = false;
 let isStarted = false;
 
 // UI 元素快取
-const canvasElem = document.getElementById("snake-game");
-const ctx = canvasElem.getContext("2d");
+const boardElem = document.getElementById("snake-board");
 const scoreElem = document.getElementById("score");
 const timerElem = document.getElementById("timer");
 const resetButtonElem = document.getElementById("reset-button");
@@ -22,9 +21,27 @@ const resultButtonElem = document.getElementById("result-button");
 const resultMessageElem = document.getElementById("result-message");
 const resultPageElem = document.getElementById("result-page");
 
+// 初始化棋盤
+function createBoard() {
+  boardElem.innerHTML = "";
+  boardElem.style.display = "grid";
+  boardElem.style.gridTemplateRows = `repeat(${ROWS}, 1fr)`;
+  boardElem.style.gridTemplateColumns = `repeat(${COLS}, 1fr)`;
+  for (let y = 0; y < ROWS; y++) {
+    for (let x = 0; x < COLS; x++) {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.dataset.row = y;
+      cell.dataset.col = x;
+      boardElem.appendChild(cell);
+    }
+  }
+}
+
 // 初始化遊戲
 function setupGame() {
-  snake = [{ x: 8 * box, y: 10 * box }];
+  createBoard();
+  snake = [{ x: Math.floor(COLS / 2), y: Math.floor(ROWS / 2) }];
   direction = null;
   nextDirection = null;
   food = spawnFood();
@@ -41,42 +58,44 @@ function setupGame() {
 
 // 食物隨機產生
 function spawnFood() {
-  return {
-    x: Math.floor(Math.random() * (canvasSize / box)) * box,
-    y: Math.floor(Math.random() * (canvasSize / box)) * box,
-  };
+  let pos;
+  do {
+    pos = {
+      x: Math.floor(Math.random() * COLS),
+      y: Math.floor(Math.random() * ROWS),
+    };
+  } while (snake.some((s) => s.x === pos.x && s.y === pos.y));
+  return pos;
 }
 
 // 畫面更新
 function draw() {
-  // 畫棋盤格背景
-  for (let y = 0; y < canvasSize / box; y++) {
-    for (let x = 0; x < canvasSize / box; x++) {
-      ctx.fillStyle = (x + y) % 2 === 0 ? "#e3f2fd" : "#bbdefb";
-      ctx.fillRect(x * box, y * box, box, box);
+  // 清空所有 cell 狀態
+  const cells = boardElem.querySelectorAll(".cell");
+  cells.forEach((cell) => {
+    cell.className = "cell";
+    cell.textContent = "";
+    // 交錯色
+    const row = parseInt(cell.dataset.row);
+    const col = parseInt(cell.dataset.col);
+    if ((row + col) % 2 === 0) {
+      cell.classList.add("even-cell");
     }
-  }
+  });
 
-  // 畫蛇（全部方框）
+  // 畫蛇
   for (let i = 0; i < snake.length; i++) {
+    const idx = snake[i].y * COLS + snake[i].x;
     if (i === 0) {
-      // 蛇頭（深綠方塊）
-      ctx.fillStyle = "#2e7d32";
-      ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      cells[idx].classList.add("snake-head");
     } else {
-      // 蛇身（淺綠方塊）
-      ctx.fillStyle = "#43a047";
-      ctx.fillRect(snake[i].x, snake[i].y, box, box);
+      cells[idx].classList.add("snake-body");
     }
   }
 
-  // 畫食物（蘋果 emoji）
-  ctx.font = `${
-    box * 0.95
-  }px "Segoe UI Emoji", "Noto Color Emoji", "Apple Color Emoji", "Arial"`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("🍎", food.x + box / 2, food.y + box / 2);
+  // 畫食物
+  const foodIdx = food.y * COLS + food.x;
+  cells[foodIdx].textContent = "🍎";
 
   // 更新分數與時間
   scoreElem.textContent = score;
@@ -87,17 +106,17 @@ function draw() {
 function moveSnake() {
   direction = nextDirection;
   let head = { ...snake[0] };
-  if (direction === "LEFT") head.x -= box;
-  if (direction === "UP") head.y -= box;
-  if (direction === "RIGHT") head.x += box;
-  if (direction === "DOWN") head.y += box;
+  if (direction === "LEFT") head.x -= 1;
+  if (direction === "UP") head.y -= 1;
+  if (direction === "RIGHT") head.x += 1;
+  if (direction === "DOWN") head.y += 1;
 
   // 撞牆或撞到自己
   if (
     head.x < 0 ||
-    head.x >= canvasSize ||
+    head.x >= COLS ||
     head.y < 0 ||
-    head.y >= canvasSize ||
+    head.y >= ROWS ||
     snake.some((segment) => segment.x === head.x && segment.y === head.y)
   ) {
     showResult();
